@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 var bcrypt = require('bcrypt');
 var jwt = require('../../services/jwt');
+var md_auth = require('../../middlewares/authenticated');
 
 const mysqlConnection = require('../database.js');
 
@@ -62,7 +63,7 @@ router.get('/familiName/:id', (req, res) => {
 
 
 // INSERT a order
-router.post('/order', (req, res) => {
+router.post('/order', md_auth.ensureAuth, (req, res) => {
   var post = req.body;
   console.log(req.body);
   mysqlConnection.query('INSERT INTO salesorder(orderLines, cashDiscount, grossAmount, surchargeRate, netAmount, vatAmount, surchargeAmount, sended) VALUES( ' + '"' + post.orderLines + '"' + ',' + '"' + post.cashDiscount + '"' + ',' + '"' + post.grossAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.netAmount + '"' + ',' + '"' + post.vatAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.sended + '"' + ');', (err, rows, fields) => {
@@ -80,6 +81,7 @@ router.post('/login', function (req, response) {
   var password = req.body.password;
 
   if (email && password) {
+    console.log(password);
     mysqlConnection.query('SELECT * FROM user WHERE email = ?', [email], function (error, results, fields) {
       console.log(password, results[0]['password']);
 
@@ -95,13 +97,13 @@ router.post('/login', function (req, response) {
             });
           }
         } else {
-          return res.status(404).send({ message: 'El usuario no se ha podido identificar' });
+          return response.status(404).send({ message: 'El usuario no se ha podido identificar' });
         }
       });
     });
     
   } else {
-    return res.status(404).send({ message: 'El usuario no se ha podido identificar!!' });
+    return response.status(404).send({ message: 'El usuario no se ha podido identificar!!' });
     
   }
 
