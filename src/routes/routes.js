@@ -49,7 +49,7 @@ router.get('/product', (req, res) => {
   });
 });
 
-router.get('/familiName', (req, res) => {
+router.get('/familiName/:id', (req, res) => {
   const { id } = req.params.id;
   mysqlConnection.query('SELECT name FROM family WHERE id = ?', [id], (err, rows, fields) => {
     if (!err) {
