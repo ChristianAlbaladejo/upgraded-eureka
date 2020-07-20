@@ -72,7 +72,6 @@ router.post('/order', (req, res) => {
       console.log(err);
     }
   });
-
 });
 
 router.post('/login', function (req, response) {
@@ -146,6 +145,17 @@ router.post('/register', function (req, res) {
 function comparePass(pass, hash) {
   return bcrypt.compare(pass, hash);
 }
+
+
+router.get('/lastOrder', (req, res) => {
+  mysqlConnection.query('SELECT MAX(id) FROM salesorder;', (err, rows, fields) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
 
 
 
