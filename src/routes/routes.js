@@ -77,6 +77,7 @@ router.post('/order', md_auth.ensureAuth, (req, res) => {
 
 router.post('/login', function (req, response) {
   var params = req.body;
+  console.log(params);
   var email = req.body.email;
   var password = req.body.password;
 
