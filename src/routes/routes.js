@@ -76,11 +76,12 @@ router.post('/order', md_auth.ensureAuth, (req, res) => {
 });
 
 router.post('/login', function (req, response) {
-  var params = req.body;
-  console.log(params);
-  var email = req.body.email;
-  var password = req.body.password;
-
+  if (req.body) {
+    var params = req.body;
+    console.log(params);
+    var email = req.body.email;
+    var password = req.body.password;
+  }
   if (email && password) {
     console.log(password);
     mysqlConnection.query('SELECT * FROM user WHERE email = ?', [email], function (error, results, fields) {
@@ -102,10 +103,10 @@ router.post('/login', function (req, response) {
         }
       });
     });
-    
+
   } else {
     return response.status(404).send({ message: 'El usuario no se ha podido identificar!!' });
-    
+
   }
 
 });
