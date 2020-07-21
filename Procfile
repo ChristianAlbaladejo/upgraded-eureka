@@ -1,1 +1,1 @@
-forever src/index.js
+npm start
