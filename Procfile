@@ -1,1 +1,1 @@
-node src/index.js
+forever src/index.js
