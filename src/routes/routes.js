@@ -78,7 +78,6 @@ router.post('/order', md_auth.ensureAuth, (req, res) => {
 });
 
 router.post('/login', function (req, response) {
- 
   if (req.body) {
     var params = req.body;
     console.log(params);
@@ -113,23 +112,20 @@ router.post('/register', function (req, res) {
   if (params.name && params.lastname && params.password && params.CIF && params.calle && params.CP && params.poblacion && params.email) {
     // Controlar usuarios duplicados
     var sql = "SELECT * FROM `user` WHERE `email`='" + params.email + "'";
-    console.log(req.body);
     mysqlConnection.query(sql, function (err, results) {
-      console.log(results);
       if (results.length) {
         res.status(200).send({
           message: 'El usuario ya existe!!'
         });
       }
       else {
+        console.log('hola')
         bcrypt.hash(params.password, 10, function (err, hash) {
           params.password = hash;
-          console.log(params.password, hash);
           var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "')";
 
           mysqlConnection.query(sql, function (err, result) {
-
-            result.status(200).send({
+            res.status(200).send({
               message: 'Registrado'
             });
           });
