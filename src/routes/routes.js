@@ -64,6 +64,7 @@ router.get('/familiName/:id', (req, res) => {
 
 // INSERT a order
 router.post('/order', md_auth.ensureAuth, (req, res) => {
+  if (req.body) {
   var post = req.body;
   console.log(req.body);
   mysqlConnection.query('INSERT INTO salesorder(orderLines, cashDiscount, grossAmount, surchargeRate, netAmount, vatAmount, surchargeAmount, sended) VALUES( ' + '"' + post.orderLines + '"' + ',' + '"' + post.cashDiscount + '"' + ',' + '"' + post.grossAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.netAmount + '"' + ',' + '"' + post.vatAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.sended + '"' + ');', (err, rows, fields) => {
@@ -73,10 +74,11 @@ router.post('/order', md_auth.ensureAuth, (req, res) => {
       console.log(err);
     }
   });
+  }
 });
 
 router.post('/login', function (req, response) {
-  console.log(req);
+ 
   if (req.body) {
     var params = req.body;
     console.log(params);
@@ -127,7 +129,7 @@ router.post('/register', function (req, res) {
 
           mysqlConnection.query(sql, function (err, result) {
 
-            res.status(200).send({
+            result.status(200).send({
               message: 'Registrado'
             });
           });
