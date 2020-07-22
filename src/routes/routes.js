@@ -4,7 +4,7 @@ const router = express.Router();
 var bcrypt = require('bcrypt');
 var jwt = require('../../services/jwt');
 var md_auth = require('../../middlewares/authenticated');
-
+var mysql = require('mysql');
 const mysqlConnection = mysql.createPool({
   host: 'eu-cdbr-west-03.cleardb.net',
   user: 'b0ab591da45cbb',
