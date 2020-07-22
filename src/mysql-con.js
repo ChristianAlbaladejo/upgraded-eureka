@@ -23,7 +23,7 @@ const mysql = require('mysql');
     console.log('db is connected');
   }
 }); */
-'use strict';
+'use strict'
 /* var mysql = require('mysql');
 const connection = mysql.createPool({
   host: 'eu-cdbr-west-03.cleardb.net',
@@ -41,30 +41,35 @@ connection.connect(function (error) {
 });
  */
 
+var mysql = require('mysql');
+
 var db_config = {
   host: 'eu-cdbr-west-03.cleardb.net',
   user: 'b0ab591da45cbb',
   password: 'bdbc7002',
   database: 'heroku_2205e3ccffad011',
+  connectionLimit: 50,
+  queueLimit: 0,
+  waitForConnection: true
 };
 
 var connection;
-
-function handleDisconnect() {
+connection = mysql.createPool(db_config);
+/* function handleDisconnect() {
   console.log('1. connecting to db:');
-  connection = mysql.createConnection(db_config); // Recreate the connection, since
+  connection = mysql.createPool(db_config); // Recreate the connection, since
   // the old one cannot be reused.
 
   connection.connect(function (err) {              	// The server is either down
     if (err) {                                     // or restarting (takes a while sometimes).
       console.log('2. error when connecting to db:', err);
-      setTimeout(handleDisconnect, 1000); // We introduce a delay before attempting to reconnect,
+      setTimeout(handleDisconnect(), 1000); // We introduce a delay before attempting to reconnect,
     }                                     	// to avoid a hot loop, and to allow our node script to
   });                                     	// process asynchronous requests in the meantime.
   // If you're also serving http, display a 503 error.
   connection.on('error', function (err) {
     console.log('3. db error', err);
-    if (err.code === 'PROTOCOL_CONNECTION_LOST') { 	// Connection to the MySQL server is usually
+    if (err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === 'PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR') { 	// Connection to the MySQL server is usually
       handleDisconnect();                      	// lost due to either server restart, or a
     } else {                                      	// connnection idle timeout (the wait_timeout
       throw err;                                  // server variable configures this)
@@ -72,5 +77,5 @@ function handleDisconnect() {
   });
 }
 
-handleDisconnect();
+handleDisconnect(); */
 module.exports = connection;
