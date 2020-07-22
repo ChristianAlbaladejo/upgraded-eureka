@@ -139,10 +139,6 @@ router.post('/register', function (req, res) {
   }
 });
 
-function comparePass(pass, hash) {
-  return bcrypt.compare(pass, hash);
-}
-
 
 router.get('/lastOrder', (req, res) => {
   mysqlConnection.query('SELECT MAX(id) FROM salesorder;', (err, rows, fields) => {
