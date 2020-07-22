@@ -5,7 +5,7 @@ var bcrypt = require('bcrypt');
 var jwt = require('../../services/jwt');
 var md_auth = require('../../middlewares/authenticated');
 
-const mysqlConnection = require('../database.js');
+const mysqlConnection = require('../mysql-con.js');
 
 // GET all families
 router.get('/', (req, res) => {
@@ -63,7 +63,7 @@ router.get('/familiName/:id', (req, res) => {
 
 
 // INSERT a order
-router.post('/order', md_auth.ensureAuth, (req, res) => {
+router.post('/order', (req, res) => {
   if (req.body) {
   var post = req.body;
   console.log(req.body);

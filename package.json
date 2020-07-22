@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "npm start"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +18,8 @@
     "express-session": "^1.17.1",
     "jwt-simple": "^0.5.1",
     "moment": "^2.19.1",
-    "mysql": "^2.15.0"
+    "mysql": "^2.16.0",
+    "q": "^1.5.1"
   },
   "devDependencies": {
     "nodemon": "^1.17.5"
