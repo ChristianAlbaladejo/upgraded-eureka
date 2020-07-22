@@ -131,11 +131,9 @@ router.post('/register', function (req, res) {
           var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "')";
 
           mysqlConnection.query(sql, function (err, result) {
-            if (!err) {
-              res.json('registrado');
-            } else {
-              console.log(err);
-            }
+            res.status(200).send({
+              message: 'Registrado'
+            });
           });
         });
       }
