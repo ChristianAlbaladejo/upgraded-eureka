@@ -25,7 +25,7 @@ const mysql = require('mysql');
 }); */
 'use strict';
 var mysql = require('mysql');
-const connection = mysql.createConnection({
+const connection = mysql.createPool({
   host: 'eu-cdbr-west-03.cleardb.net',
   user: 'b0ab591da45cbb',
   password: 'bdbc7002',
