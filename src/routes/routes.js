@@ -10,6 +10,7 @@ const mysqlConnection = mysql.createPool({
   user: 'b0ab591da45cbb',
   password: 'bdbc7002',
   database: 'heroku_2205e3ccffad011',
+  connectionLimit: 10,
 });
 
 // GET all families
@@ -130,9 +131,11 @@ router.post('/register', function (req, res) {
           var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "')";
 
           mysqlConnection.query(sql, function (err, result) {
-            res.status(200).send({
-              message: 'Registrado'
-            });
+            if (!err) {
+              res.json('registrado');
+            } else {
+              console.log(err);
+            }
           });
         });
       }
