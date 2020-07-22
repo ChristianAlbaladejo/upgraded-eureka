@@ -5,7 +5,12 @@ var bcrypt = require('bcrypt');
 var jwt = require('../../services/jwt');
 var md_auth = require('../../middlewares/authenticated');
 
-const mysqlConnection = require('../mysql-con.js');
+const mysqlConnection = mysql.createPool({
+  host: 'eu-cdbr-west-03.cleardb.net',
+  user: 'b0ab591da45cbb',
+  password: 'bdbc7002',
+  database: 'heroku_2205e3ccffad011',
+});
 
 // GET all families
 router.get('/', (req, res) => {
@@ -63,7 +68,7 @@ router.get('/familiName/:id', (req, res) => {
 
 
 // INSERT a order
-router.post('/order', (req, res) => {
+router.post('/order',md_auth.ensureAuthç ,(req, res) => {
   if (req.body) {
   var post = req.body;
   console.log(req.body);
