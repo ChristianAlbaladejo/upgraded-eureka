@@ -63,7 +63,7 @@ router.get('/familiName/:id', (req, res) => {
 
 
 // INSERT a order
-router.post('/order', (req, res) => {
+router.post('/order', md_auth.ensureAuth,(req, res) => {
   if (req.body) {
   var post = req.body;
   console.log(req.body);
