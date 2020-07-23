@@ -63,17 +63,17 @@ router.get('/familiName/:id', (req, res) => {
 
 
 // INSERT a order
-router.post('/order', md_auth.ensureAuth,(req, res) => {
+router.post('/order', md_auth.ensureAuth, (req, res) => {
   if (req.body) {
-  var post = req.body;
-  console.log(req.body);
-  mysqlConnection.query('INSERT INTO salesorder(orderLines, cashDiscount, grossAmount, surchargeRate, netAmount, vatAmount, surchargeAmount, sended) VALUES( ' + '"' + post.orderLines + '"' + ',' + '"' + post.cashDiscount + '"' + ',' + '"' + post.grossAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.netAmount + '"' + ',' + '"' + post.vatAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.sended + '"' + ');', (err, rows, fields) => {
-    if (!err) {
-      res.json({ status: 'order Saved' });
-    } else {
-      console.log(err);
-    }
-  });
+    var post = req.body;
+    console.log(req.body);
+    mysqlConnection.query('INSERT INTO salesorder(orderLines, cashDiscount, grossAmount, surchargeRate, netAmount, vatAmount, surchargeAmount, sended) VALUES( ' + '"' + post.orderLines + '"' + ',' + '"' + post.cashDiscount + '"' + ',' + '"' + post.grossAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.netAmount + '"' + ',' + '"' + post.vatAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.sended + '"' + ');', (err, rows, fields) => {
+      if (!err) {
+        res.json({ status: 'order Saved' });
+      } else {
+        console.log(err);
+      }
+    });
   }
 });
 
@@ -90,13 +90,13 @@ router.post('/login', function (req, response) {
       console.log(password, results[0]['password']);
       bcrypt.compare(password, results[0]['password'], (err, check) => {
         if (check) {
-            //generar y devolver token
-            results[0]['password'] = undefined;
-            return response.status(200).send({
-              token: jwt.createToken(results[0]['id']),
-              user: results
-            });
-          
+          //generar y devolver token
+          results[0]['password'] = undefined;
+          return response.status(200).send({
+            token: jwt.createToken(results[0]['id']),
+            user: results
+          });
+
         } else {
           return response.status(404).send({ message: 'El usuario no se ha podido identificar' });
         }
@@ -150,6 +150,22 @@ router.get('/lastOrder', (req, res) => {
   });
 });
 
+//filter search
+router.get('/filter/:filter?', (req, res) => {
+  let filter
+  if (req.params.filter) {
+     filter = req.params.filter
+  }else{
+      filter = ''
+  }
+  mysqlConnection.query('SELECT * FROM family INNER JOIN product ON family.id = product.familyId where family.name like ' + "'" + filter + "%'"+ ' or product.name like ' + "'" + filter + "%'" + ' ;', (err, rows, fields) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
 
 
 module.exports = router;
