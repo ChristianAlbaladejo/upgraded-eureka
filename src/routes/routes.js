@@ -40,7 +40,7 @@ router.get('/products', (req, res) => {
 });
 
 router.get('/product/:id', (req, res) => {
-  const { id } = req.params.id;
+  const { id } = req.params;
   mysqlConnection.query('SELECT * FROM product WHERE id = ?', [id], (err, rows, fields) => {
     if (!err) {
       res.json(rows);
