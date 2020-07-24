@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
 // filteriring families 
 router.get('/products/:families', (req, res) => {
   const { families } = req.params;
-  mysqlConnection.query('SELECT * FROM product WHERE id = ?', [families], (err, rows, fields) => {
+  mysqlConnection.query('SELECT * FROM product WHERE familyId = ?', [families], (err, rows, fields) => {
     if (!err) {
       res.json(rows);
     } else {
