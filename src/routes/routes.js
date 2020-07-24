@@ -39,7 +39,7 @@ router.get('/products', (req, res) => {
   });
 });
 
-router.get('/product', (req, res) => {
+router.get('/product/:id', (req, res) => {
   const { id } = req.params.id;
   mysqlConnection.query('SELECT * FROM product WHERE id = ?', [id], (err, rows, fields) => {
     if (!err) {
