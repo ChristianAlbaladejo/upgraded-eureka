@@ -168,7 +168,7 @@ router.get('/filter/:filter?', (req, res) => {
 });
 
 //filter search by product name
-router.get('/filter/:filterByName?', (req, res) => {
+router.get('/filterByName/:filter?', (req, res) => {
   let filter
   if (req.params.filter) {
     filter = req.params.filter
