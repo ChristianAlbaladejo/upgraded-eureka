@@ -167,5 +167,22 @@ router.get('/filter/:filter?', (req, res) => {
   });
 });
 
+//filter search by product name
+router.get('/filter/:filterByName?', (req, res) => {
+  let filter
+  if (req.params.filter) {
+    filter = req.params.filter
+  } else {
+    filter = ''
+  }
+  mysqlConnection.query('SELECT * FROM product  where name like ' + "'" + filter + "%'" +  ' ;', (err, rows, fields) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
+
 
 module.exports = router;

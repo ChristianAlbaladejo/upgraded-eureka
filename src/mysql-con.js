@@ -43,6 +43,13 @@ connection.connect(function (error) {
 
 var mysql = require('mysql');
 
+/*  var db_config = {
+  host: '127.0.0.1',
+  user: 'root',
+  password: '',
+  database: 'sistema',
+};  */
+
 var db_config = {
   host: 'eu-cdbr-west-03.cleardb.net',
   user: 'b0ab591da45cbb',
@@ -51,7 +58,7 @@ var db_config = {
   connectionLimit: 50,
   queueLimit: 0,
   waitForConnection: true
-};
+}; 
 
 var connection;
 connection = mysql.createPool(db_config);
