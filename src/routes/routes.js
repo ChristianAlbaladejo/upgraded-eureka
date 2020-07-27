@@ -168,14 +168,16 @@ router.get('/filter/:filter?', (req, res) => {
 });
 
 //filter search by product name
-router.get('/filterByName/:filter?', (req, res) => {
+router.get('/filterByName/:filter?/:family?', (req, res) => {
   let filter
+  let family
   if (req.params.filter) {
     filter = req.params.filter
+    family = req.params.family
   } else {
     filter = ''
   }
-  mysqlConnection.query('SELECT * FROM product  where name like ' + "'" + filter + "%'" +  ' ;', (err, rows, fields) => {
+  mysqlConnection.query('SELECT * FROM family INNER JOIN product ON family.id = product.familyId where family.id like ' + "'" + family + "'" + ' and product.name like ' + "'" + filter + "%'" + ' ;', (err, rows, fields) => {
     if (!err) {
       res.json(rows);
     } else {
