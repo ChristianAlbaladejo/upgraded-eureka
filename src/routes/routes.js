@@ -186,39 +186,9 @@ router.get('/filterByName/:filter?/:family?', (req, res) => {
     }
   });
 });
-
-function card() {
+router.post('/charge', function (req, res) {
   const stripe = require("stripe")("sk_test_51H9oTAATbeiMfoWZrwcnxrpBAUJmjlir7GHsrp1zNH3BVDxFuvH6iDf2SZNaaP1wNVcBn291PNT2bb1pYuCqsGk700JUfLsoaM");
-  /* const stripToken = req.body.stripToken;
-  const amount = req.body.amount */
-  stripe.charges.create(
-    {
-      amount: 710,
-      currency: 'eur',
-      source: 'tok_1H9vU0ATbeiMfoWZwhvnRAHU',
-      description: 'My First Test Charge (created for API docs)',
-    },
-    function (err, charge) {
-      console.log(charge)
-      if (err) {
-        res.send({
-          success: false,
-          message: 'ERrorr'
-        });
-      } else {
-        res.send({
-          success: true,
-          message: 'Success'
-        })
-      }
-    }
-  );
-}
-
-router.post('/secret', (req, res) => {
-  console.log(req)
-  const stripe = require("stripe")("sk_test_51H9oTAATbeiMfoWZrwcnxrpBAUJmjlir7GHsrp1zNH3BVDxFuvH6iDf2SZNaaP1wNVcBn291PNT2bb1pYuCqsGk700JUfLsoaM");
-  const stripToken = req.body.stripToken;
+  const stripToken = req.body.stripeToken;
   const amount = req.body.amount
   stripe.charges.create(
     {
