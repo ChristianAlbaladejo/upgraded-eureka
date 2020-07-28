@@ -154,11 +154,11 @@ router.get('/lastOrder', (req, res) => {
 router.get('/filter/:filter?', (req, res) => {
   let filter
   if (req.params.filter) {
-     filter = req.params.filter
-  }else{
-      filter = ''
+    filter = req.params.filter
+  } else {
+    filter = ''
   }
-  mysqlConnection.query('SELECT * FROM family INNER JOIN product ON family.id = product.familyId where family.name like ' + "'" + filter + "%'"+ ' or product.name like ' + "'" + filter + "%'" + ' ;', (err, rows, fields) => {
+  mysqlConnection.query('SELECT * FROM family INNER JOIN product ON family.id = product.familyId where family.name like ' + "'" + filter + "%'" + ' or product.name like ' + "'" + filter + "%'" + ' ;', (err, rows, fields) => {
     if (!err) {
       res.json(rows);
     } else {
@@ -176,6 +176,7 @@ router.get('/filterByName/:filter?/:family?', (req, res) => {
     family = req.params.family
   } else {
     filter = ''
+    family = ''
   }
   mysqlConnection.query('SELECT * FROM family INNER JOIN product ON family.id = product.familyId where family.id like ' + "'" + family + "'" + ' and product.name like ' + "'" + filter + "%'" + ' ;', (err, rows, fields) => {
     if (!err) {
@@ -186,5 +187,61 @@ router.get('/filterByName/:filter?/:family?', (req, res) => {
   });
 });
 
+function card() {
+  const stripe = require("stripe")("sk_test_51H9oTAATbeiMfoWZrwcnxrpBAUJmjlir7GHsrp1zNH3BVDxFuvH6iDf2SZNaaP1wNVcBn291PNT2bb1pYuCqsGk700JUfLsoaM");
+  /* const stripToken = req.body.stripToken;
+  const amount = req.body.amount */
+  stripe.charges.create(
+    {
+      amount: 710,
+      currency: 'eur',
+      source: 'tok_1H9vU0ATbeiMfoWZwhvnRAHU',
+      description: 'My First Test Charge (created for API docs)',
+    },
+    function (err, charge) {
+      console.log(charge)
+      if (err) {
+        res.send({
+          success: false,
+          message: 'ERrorr'
+        });
+      } else {
+        res.send({
+          success: true,
+          message: 'Success'
+        })
+      }
+    }
+  );
+}
+
+router.post('/secret', (req, res) => {
+  console.log(req)
+  const stripe = require("stripe")("sk_test_51H9oTAATbeiMfoWZrwcnxrpBAUJmjlir7GHsrp1zNH3BVDxFuvH6iDf2SZNaaP1wNVcBn291PNT2bb1pYuCqsGk700JUfLsoaM");
+  const stripToken = req.body.stripToken;
+  const amount = req.body.amount
+  stripe.charges.create(
+    {
+      amount: amount,
+      currency: 'eur',
+      source: stripToken,
+      description: 'My First Test Charge (created for API docs)',
+    },
+    function (err, charge) {
+      console.log(charge)
+      if (err) {
+        res.send({
+          success: false,
+          message: 'ERrorr'
+        });
+      } else {
+        res.send({
+          success: true,
+          message: 'Success'
+        })
+      }
+    }
+  );
+});
 
 module.exports = router;
