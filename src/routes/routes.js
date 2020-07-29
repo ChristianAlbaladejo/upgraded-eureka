@@ -109,7 +109,7 @@ router.post('/login', function (req, response) {
 
 router.post('/register', function (req, res) {
   var params = req.body;
-  if (params.name && params.lastname && params.password && params.CIF && params.calle && params.CP && params.poblacion && params.email) {
+  if (params.name && params.lastname && params.password && params.CIF && params.calle && params.CP && params.telefono &&  params.poblacion && params.email) {
     // Controlar usuarios duplicados
     var sql = "SELECT * FROM `user` WHERE `email`='" + params.email + "'";
     mysqlConnection.query(sql, function (err, results) {
@@ -119,10 +119,9 @@ router.post('/register', function (req, res) {
         });
       }
       else {
-        console.log('hola')
         bcrypt.hash(params.password, 10, function (err, hash) {
           params.password = hash;
-          var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "')";
+          var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "')";
 
           mysqlConnection.query(sql, function (err, result) {
             res.status(200).send({
