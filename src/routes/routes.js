@@ -213,4 +213,20 @@ router.post('/charge', function (req, res) {
   );
 });
 
+router.get('/salesorders/:id', md_auth.ensureAuth,(req, res) => {
+  let id 
+  if (req.params.id) {
+    id = req.params.id
+  } else {
+    id = '';
+  }
+  mysqlConnection.query('SELECT * FROM salesorder where salesorder.userId =' + "'" + id + "'" + ' ;', (err, rows, fields) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
+
 module.exports = router;
