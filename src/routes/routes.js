@@ -64,10 +64,11 @@ router.get('/familiName/:id', (req, res) => {
 
 // INSERT a order
 router.post('/order', md_auth.ensureAuth, (req, res) => {
+  let now = new Date();
   if (req.body) {
     var post = req.body;
     console.log(req.body);
-    mysqlConnection.query('INSERT INTO salesorder(orderLines, cashDiscount, grossAmount, surchargeRate, netAmount, vatAmount, surchargeAmount, userId ,sended) VALUES( ' + '"' + post.orderLines + '"' + ',' + '"' + post.cashDiscount + '"' + ',' + '"' + post.grossAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.netAmount + '"' + ',' + '"' + post.vatAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.userId + '"' + ',' + '"' + post.sended + '"' + ');', (err, rows, fields) => {
+    mysqlConnection.query('INSERT INTO salesorder(orderLines, cashDiscount, grossAmount, surchargeRate, netAmount, vatAmount, surchargeAmount, userId ,sended,date) VALUES( ' + '"' + post.orderLines + '"' + ',' + '"' + post.cashDiscount + '"' + ',' + '"' + post.grossAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.netAmount + '"' + ',' + '"' + post.vatAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.userId + '"' + ',' + '"' + post.sended + '"' + ',' + '"' + now + '"' + ');', (err, rows, fields) => {
       if (!err) {
         res.json({ status: 'order Saved' });
       } else {
@@ -109,7 +110,7 @@ router.post('/login', function (req, response) {
 
 router.post('/register', function (req, res) {
   var params = req.body;
-  if (params.name && params.lastname && params.password && params.CIF && params.calle && params.CP && params.telefono &&  params.poblacion && params.email) {
+  if (params.name && params.lastname && params.password && params.CIF && params.calle && params.CP && params.telefono && params.poblacion && params.email) {
     // Controlar usuarios duplicados
     var sql = "SELECT * FROM `user` WHERE `email`='" + params.email + "'";
     mysqlConnection.query(sql, function (err, results) {
@@ -213,8 +214,8 @@ router.post('/charge', function (req, res) {
   );
 });
 
-router.get('/salesorders/:id', md_auth.ensureAuth,(req, res) => {
-  let id 
+router.get('/salesorders/:id', md_auth.ensureAuth, (req, res) => {
+  let id
   if (req.params.id) {
     id = req.params.id
   } else {
