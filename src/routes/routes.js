@@ -272,7 +272,7 @@ router.post('/passwordreset', function (req, res) {
           from: 'pruebasdecosasparamiscosas@gmail.com', // sender address
           to: 'chispiglass@gmail.com', // list of receivers
           subject: 'Subject of your email', // Subject line
-          html: '<a href="http://localhost:3000/resetpassword/' + payload.id + '/' + token + '" > Reset password</a>'// plain text body
+          html: '<a href="https://panesandco.herokuapp.com/resetpassword/' + payload.id + '/' + token + '" > Reset password</a>'// plain text body
         };
 
         transporter.sendMail(mailOptions, function (err, info) {
