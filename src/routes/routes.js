@@ -74,6 +74,27 @@ router.post('/order', md_auth.ensureAuth, (req, res) => {
     mysqlConnection.query('INSERT INTO salesorder(orderLines, cashDiscount, grossAmount, surchargeRate, netAmount, vatAmount, surchargeAmount, userId ,sended,date) VALUES( ' + '"' + post.orderLines + '"' + ',' + '"' + post.cashDiscount + '"' + ',' + '"' + post.grossAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.netAmount + '"' + ',' + '"' + post.vatAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.userId + '"' + ',' + '"' + post.sended + '"' + ',' + '"' + now + '"' + ');', (err, rows, fields) => {
       if (!err) {
         res.json({ status: 'order Saved' });
+        var transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'pruebasdecosasparamiscosas@gmail.com',
+            pass: 'Blade001$'
+          }
+        });
+
+        const mailOptions = {
+          from: 'pruebasdecosasparamiscosas@gmail.com', // sender address
+          to: 'chispiglass@gmail.com', // list of receivers
+          subject: 'Subject of your email', // Subject line
+          text: 'Muchas gracias por hacer tu pedido en Panes&Co'// plain text body
+        };
+
+        transporter.sendMail(mailOptions, function (err, info) {
+          if (err)
+            console.log(err)
+          else
+            console.log(info);
+        });
       } else {
         console.log(err);
       }
