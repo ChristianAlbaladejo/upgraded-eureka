@@ -82,6 +82,7 @@ router.post('/order', md_auth.ensureAuth, (req, res) => {
 });
 
 router.post('/login', function (req, response) {
+  console.log(req.body)
   if (req.body) {
     var params = req.body;
     console.log(params);
@@ -91,7 +92,7 @@ router.post('/login', function (req, response) {
   if (email && password) {
     console.log(password);
     mysqlConnection.query('SELECT * FROM user WHERE email = ?', [email], function (error, results, fields) {
-      console.log(password, results[0]['password']);
+      if (results.length != 0) {
       bcrypt.compare(password, results[0]['password'], (err, check) => {
         if (check) {
           //generar y devolver token
@@ -105,6 +106,9 @@ router.post('/login', function (req, response) {
           return response.status(404).send({ message: 'El usuario no se ha podido identificar' });
         }
       });
+      }else{
+        return response.status(404).send({ message: 'El usuario no existe' });
+      }
     });
   } else {
     return response.status(404).send({ message: 'El usuario no se ha podido identificar!!' });
