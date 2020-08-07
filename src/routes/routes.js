@@ -67,8 +67,9 @@ router.get('/familiName/:id', (req, res) => {
 
 // INSERT a order
 router.post('/order', md_auth.ensureAuth, (req, res) => {
-  let date = Date.now();
-  var dt = new Date(date);
+  var rightNow = new Date();
+  var dt = rightNow.toISOString().slice(0, 10).replace(/-/g, "");
+  console.log(date);
   if (req.body) {
     var post = req.body;
     console.log(req.body);
