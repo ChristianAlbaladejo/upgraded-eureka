@@ -67,7 +67,8 @@ router.get('/familiName/:id', (req, res) => {
 
 // INSERT a order
 router.post('/order', md_auth.ensureAuth, (req, res) => {
-  var rightNow = moment().valueOf();
+  var rightNow = moment();
+  console.log(rightNow)
   if (req.body) {
     var post = req.body;
     console.log(req.body);
