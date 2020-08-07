@@ -84,7 +84,7 @@ router.post('/order', md_auth.ensureAuth, (req, res) => {
 
         const mailOptions = {
           from: 'pruebasdecosasparamiscosas@gmail.com', // sender address
-          to: 'chispiglass@gmail.com', // list of receivers
+          to: req.body.email, // list of receivers
           subject: 'Subject of your email', // Subject line
           text: 'Muchas gracias por hacer tu pedido en Panes&Co'// plain text body
         };
@@ -294,7 +294,7 @@ router.post('/passwordreset', function (req, res) {
 
         const mailOptions = {
           from: 'pruebasdecosasparamiscosas@gmail.com', // sender address
-          to: 'chispiglass@gmail.com', // list of receivers
+          to: payload.email, // list of receivers
           subject: 'Subject of your email', // Subject line
           html: '<a href="https://panesandco.herokuapp.com/resetpassword/' + payload.id + '/' + token + '" > Reset password</a>'// plain text body
         };
