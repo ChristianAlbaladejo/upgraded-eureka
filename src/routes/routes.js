@@ -67,12 +67,12 @@ router.get('/familiName/:id', (req, res) => {
 
 // INSERT a order
 router.post('/order', md_auth.ensureAuth, (req, res) => {
-  var fechaEnMiliseg = Date.now();
+  var fechaEnMiliseg = new Date().toISOString()
   console.log(fechaEnMiliseg)
   if (req.body) {
     var post = req.body;
     console.log(req.body);
-    mysqlConnection.query('INSERT INTO salesorder(orderLines, cashDiscount, grossAmount, surchargeRate, netAmount, vatAmount, surchargeAmount, userId ,sended,date) VALUES( ' + '"' + post.orderLines + '"' + ',' + '"' + post.cashDiscount + '"' + ',' + '"' + post.grossAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.netAmount + '"' + ',' + '"' + post.vatAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.userId + '"' + ',' + '"' + post.sended + '"' + ',' + '"' + fechaEnMiliseg.toISOString() + '"' + ');', (err, rows, fields) => {
+    mysqlConnection.query('INSERT INTO salesorder(orderLines, cashDiscount, grossAmount, surchargeRate, netAmount, vatAmount, surchargeAmount, userId ,sended,date) VALUES( ' + '"' + post.orderLines + '"' + ',' + '"' + post.cashDiscount + '"' + ',' + '"' + post.grossAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.netAmount + '"' + ',' + '"' + post.vatAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.userId + '"' + ',' + '"' + post.sended + '"' + ',' + '"' + fechaEnMiliseg + '"' + ');', (err, rows, fields) => {
       if (!err) {
         res.json({ status: 'order Saved' });
         var transporter = nodemailer.createTransport({
