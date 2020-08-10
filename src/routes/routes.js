@@ -68,7 +68,7 @@ router.get('/familiName/:id', (req, res) => {
 // INSERT a order
 router.post('/order', md_auth.ensureAuth, (req, res) => {
   var fechaEnMiliseg = Date.now();
-  console.log(rightNow)
+  console.log(fechaEnMiliseg)
   if (req.body) {
     var post = req.body;
     console.log(req.body);
