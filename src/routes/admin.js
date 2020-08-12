@@ -13,7 +13,7 @@ var secret = 'fe1a1915a379f3be5394b64d14794932-1506868106675';
 
 
 
-router.get('/admin/sales/:sord?', (req, res) => {
+router.get('/admin/sales/:sord?', md_auth.ensureAuth, (req, res) => {
     console.log(req.params)
     if (req.params.sord != 'all') {
         mysqlConnection.query('SELECT * FROM salesOrder order by id DESC LIMIT 5', (err, rows, fields) => {
@@ -24,7 +24,7 @@ router.get('/admin/sales/:sord?', (req, res) => {
             }
         });
     }else{
-    mysqlConnection.query('SELECT * FROM salesOrder order by id DESC', (err, rows, fields) => {
+        mysqlConnection.query('SELECT * FROM salesOrder order by id DESC', md_auth.ensureAuth, (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
@@ -35,7 +35,7 @@ router.get('/admin/sales/:sord?', (req, res) => {
 });
 
 router.get('/admin/salesFail', (req, res) => {
-    mysqlConnection.query("SELECT * FROM salesOrder where sended = 'false'", (err, rows, fields) => {
+    mysqlConnection.query("SELECT * FROM salesOrder where sended = 'false'", md_auth.ensureAuth, (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
@@ -45,7 +45,7 @@ router.get('/admin/salesFail', (req, res) => {
 });
 
 router.get('/admin/totalRevenue', (req, res) => {
-    mysqlConnection.query('SELECT SUM(grossAmount) FROM salesOrder', (err, rows, fields) => {
+    mysqlConnection.query('SELECT SUM(grossAmount) FROM salesOrder', md_auth.ensureAuth, (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
@@ -55,7 +55,7 @@ router.get('/admin/totalRevenue', (req, res) => {
 });
 
 router.get('/admin/totalUser', (req, res) => {
-    mysqlConnection.query('SELECT COUNT(*) FROM user', (err, rows, fields) => {
+    mysqlConnection.query('SELECT COUNT(*) FROM user', md_auth.ensureAuth, (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
@@ -65,7 +65,7 @@ router.get('/admin/totalUser', (req, res) => {
 });
 
 router.get('/admin/totalSales', (req, res) => {
-    mysqlConnection.query('SELECT COUNT(*) FROM salesOrder', (err, rows, fields) => {
+    mysqlConnection.query('SELECT COUNT(*) FROM salesOrder', md_auth.ensureAuth, (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
