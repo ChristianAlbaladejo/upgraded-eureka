@@ -63,7 +63,7 @@ router.get('/admin/totalSales', (req, res) => {
     });
 });
 
-router.post('/login', function (req, response) {
+router.post('/admin/login', function (req, response) {
     if (req.body) {
         var params = req.body;
         var email = req.body.email;
@@ -73,7 +73,7 @@ router.post('/login', function (req, response) {
         console.log(email);
         mysqlConnection.query('SELECT * FROM user WHERE email = ?', [email], function (error, results, fields) {
             console.log(results);
-            if (results.length != 0) {
+            if (results.length != 0 && results.role == 'ADMIN') {
                 bcrypt.compare(password, results[0]['password'], (err, check) => {
                     if (check) {
                         //generar y devolver token
@@ -96,7 +96,7 @@ router.post('/login', function (req, response) {
     }
 });
 
-router.post('/register', function (req, res) {
+router.post('/admin/register', function (req, res) {
     var params = req.body;
     if (params.name && params.lastname && params.password && params.CIF && params.calle && params.CP && params.telefono && params.poblacion && params.email) {
         // Controlar usuarios duplicados
@@ -110,7 +110,7 @@ router.post('/register', function (req, res) {
             else {
                 bcrypt.hash(params.password, 10, function (err, hash) {
                     params.password = hash;
-                    var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "')";
+                    var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`,`role`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "','" + 'CUSTOMER' + "')";
 
                     mysqlConnection.query(sql, function (err, result) {
                         res.status(200).send({
