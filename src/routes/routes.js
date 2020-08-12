@@ -113,7 +113,7 @@ router.post('/login', function (req, response) {
     console.log(email);
     mysqlConnection.query('SELECT * FROM user WHERE email = ?', [email], function (error, results, fields) {
       console.log(results);
-      if (results.length != 0) {
+      if (results.length != 0 && results.role == 'CUSTOMER') {
       bcrypt.compare(password, results[0]['password'], (err, check) => {
         if (check) {
           //generar y devolver token
