@@ -18,6 +18,7 @@ app.use((req, res, next) => {
 });
 // Routess
 app.use(require('./routes/routes'));
+app.use(require('./routes/admin'));
 
 // Starting the server
 app.listen(app.get('port'), () => {
