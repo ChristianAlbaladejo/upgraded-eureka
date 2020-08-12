@@ -14,7 +14,8 @@ var secret = 'fe1a1915a379f3be5394b64d14794932-1506868106675';
 
 
 router.get('/admin/sales/:sord?', (req, res) => {
-    if (res.params.sord) {
+    console.log(req.params)
+    if (req.params.sord) {
         mysqlConnection.query('SELECT * FROM salesOrder order by id DESC LIMIT 5', (err, rows, fields) => {
             if (!err) {
                 res.json(rows);
