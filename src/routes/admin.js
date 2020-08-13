@@ -87,6 +87,7 @@ router.get('/admin/returnUser/:id', md_auth.ensureAuth, (req, res) => {
 
 router.put('/admin/updateOrder/:order', md_auth.ensureAuth, (req, res) => {
     const { order } = req.params;
+    console.log(JSON.stringify(req.headers));
     mysqlConnection.query("UPDATE salesorder set sended = 'true' WHERE id=?", [order], (err, rows, fields) => {
         if (!err) {
             res.json(rows);
