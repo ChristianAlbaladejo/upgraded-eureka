@@ -85,6 +85,17 @@ router.get('/admin/returnUser/:id', md_auth.ensureAuth, (req, res) => {
     });
 });
 
+router.post('/admin/updateOrder/:order', md_auth.ensureAuth, (req, res) => {
+    const { order } = req.params;
+    mysqlConnection.query("UPDATE salesorder set sended = 'true' WHERE id=?", [order], (err, rows, fields) => {
+        if (!err) {
+            res.json(rows);
+        } else {
+            console.log(err);
+        }
+    });
+});
+
 router.post('/admin/login', function (req, response) {
     if (req.body) {
         var params = req.body;
