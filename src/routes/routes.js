@@ -72,7 +72,7 @@ router.post('/order', md_auth.ensureAuth, (req, res) => {
   if (req.body) {
     var post = req.body;
     console.log(req.body);
-    mysqlConnection.query('INSERT INTO salesorder(orderLines, cashDiscount, grossAmount, surchargeRate, netAmount, vatAmount, surchargeAmount, userId ,sended,date,deliverydate, orderNotes) VALUES( ' + '"' + post.orderLines + '"' + ',' + '"' + post.cashDiscount + '"' + ',' + '"' + post.grossAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.netAmount + '"' + ',' + '"' + post.vatAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.userId + '"' + ',' + '"' + post.sended + '"' + ',' + '"' + fechaEnMiliseg + '"' + ',' + '"' + req.body.deliveryDate + '"' + ',' + '"' + req.body.orderNotes + '"' + ');', (err, rows, fields) => {
+    mysqlConnection.query('INSERT INTO salesorder(orderLines, cashDiscount, grossAmount, surchargeRate, netAmount, vatAmount, surchargeAmount, userId ,sended,date,chargesType,deliverydate, orderNotes) VALUES( ' + '"' + post.orderLines + '"' + ',' + '"' + post.cashDiscount + '"' + ',' + '"' + post.grossAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.netAmount + '"' + ',' + '"' + post.vatAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.userId + '"' + ',' + '"' + post.sended + '"' + ',' + '"' + fechaEnMiliseg + '"' + ',' + '"' + post.chargesType + '"' + ',' + '"' +post.deliveryDate + '"' + ',' + '"' +post.orderNotes + '"' + ');', (err, rows, fields) => {
       if (!err) {
         res.json({ status: 'order Saved' });
         var transporter = nodemailer.createTransport({
