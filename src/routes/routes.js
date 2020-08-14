@@ -140,7 +140,7 @@ router.post('/register', function (req, res) {
   var params = req.body;
   if (params.name && params.lastname && params.password && params.CIF && params.calle && params.CP && params.telefono && params.poblacion && params.email) {
     // Controlar usuarios duplicados
-    var sql = "SELECT * FROM `user` WHERE `email`='" + params.email + "'";
+    var sql = "SELECT * FROM `customer` WHERE `email`='" + params.email + "'";
     mysqlConnection.query(sql, function (err, results) {
       if (results.length) {
         res.status(200).send({
@@ -150,7 +150,7 @@ router.post('/register', function (req, res) {
       else {
         bcrypt.hash(params.password, 10, function (err, hash) {
           params.password = hash;
-          var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`,`role`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "','"+'CUSTOMER'+ "')";
+          var sql = "INSERT INTO `customer`(`id`,`fiscalName`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`,`role`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "','"+'CUSTOMER'+ "')";
 
           mysqlConnection.query(sql, function (err, result) {
             res.status(200).send({
@@ -170,6 +170,16 @@ router.post('/register', function (req, res) {
 
 router.get('/lastOrder', (req, res) => {
   mysqlConnection.query('SELECT MAX(id) FROM salesorder;', (err, rows, fields) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
+
+router.get('/lastCustomer', (req, res) => {
+  mysqlConnection.query('SELECT MAX(id) FROM customer;', (err, rows, fields) => {
     if (!err) {
       res.json(rows);
     } else {

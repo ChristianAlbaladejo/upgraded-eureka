@@ -96,6 +96,20 @@ router.put('/admin/updateOrder/:order', md_auth.ensureAuth, (req, res) => {
     });
 });
 
+router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
+    const  products  = req.body;
+    console.log(req);
+    res.json(products);
+    /* mysqlConnection.query("truncate customer;") */
+    /* mysqlConnection.query("UPDATE salesorder set sended = 'true' WHERE id=?", [order], (err, rows, fields) => {
+        if (!err) {
+            res.json(rows);
+        } else {
+            console.log(err);
+        }
+    }); */
+});
+
 router.post('/admin/login', function (req, response) {
     if (req.body) {
         var params = req.body;
