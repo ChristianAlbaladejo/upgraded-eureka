@@ -99,8 +99,9 @@ router.put('/admin/updateOrder/:order', md_auth.ensureAuth, (req, res) => {
 router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
     const  products  = req.body.products;
    let  p = JSON.parse(products)
+    mysqlConnection.query("DROP TABLE product;");
    for (let i = 0; i < p.length; i++) {
-       console.log(p[i].id);
+       mysqlConnection.query("INSERT INTO product (id, name, baseSaleFormatId, buttonText, color, PLU, familyId, vatId,useAsDirectSale,saleableAsMain,saleableAsAddin,isSoldByWeight,askForPreparationNotes,askForAddins,printWhenPriceIsZero,preparationTypeId,preparationOrderId,costPrice,image,quantity,notes,active) VALUES ('" + p[i].id + "','" + p[i].name + "','" + p[i].baseSaleFormatId + "','" + p[i].color + "','" + p[i].PLU + "','" + p[i].familyId + "','" + p[i].useAsDirectSale + "','" + p[i].saleableAsMain + "','" + p[i].saleableAsAddin + "','" + p[i].isSoldByWeight + "','" + p[i].askForPreparationNotes + "','" + p[i].askForAddins + "','" + p[i].printWhenPriceIsZero + "','" + p[i].preparationTypeId + "','" + p[i].preparationOrderId + "','" + p[i].costPrice + "','" + p[i].image + "','" + p[i].quantity + "','" + p[i].notes + "','" + p[i].active + "');")
    }
     res.json(products);
     /* mysqlConnection.query("truncate customer;") */
