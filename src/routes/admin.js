@@ -98,7 +98,7 @@ router.put('/admin/updateOrder/:order', md_auth.ensureAuth, (req, res) => {
 
 router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
     const  products  = req.body.products;
-   let  p = JSON.stringify(products)
+   let  p = JSON.parse(products)
    console.log(p)
     res.json(products);
     /* mysqlConnection.query("truncate customer;") */
