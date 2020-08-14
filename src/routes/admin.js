@@ -98,7 +98,6 @@ router.put('/admin/updateOrder/:order', md_auth.ensureAuth, (req, res) => {
 
 router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
     const  products  = req.body.products;
-    products = JSON.stringify(products)
     res.json(products);
     /* mysqlConnection.query("truncate customer;") */
     /* mysqlConnection.query("UPDATE salesorder set sended = 'true' WHERE id=?", [order], (err, rows, fields) => {
