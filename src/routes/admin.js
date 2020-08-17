@@ -119,7 +119,7 @@ router.get('/admin/getchars/', md_auth.ensureAuth, (req, res) => {
     for (let i = 0; i < 12; i++) {     
         mysqlConnection.query("SELECT count(*) as total from salesorder where month(deliverydate)= "+i+";", function (error, results, fields) {
             char.push(results)
-            console.log(results)
+            console.log(results[0])
         });
     }
     res.json(char);
