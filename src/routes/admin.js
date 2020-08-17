@@ -48,7 +48,7 @@ router.get('/admin/getchars/:id', md_auth.ensureAuth, (req, res) => {
     const { id } = req.params;
         mysqlConnection.query("SELECT count(*) from salesorder where month(deliverydate)= ?", [id], function (error, results, fields) {
             if (!err) {
-                res.json(rows);
+                res.json(results);
             } else {
                 console.log(err);
             }
