@@ -153,9 +153,15 @@ router.post('/register', function (req, res) {
           var sql = "INSERT INTO `customer`(`id`,`fiscalName`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`,`role`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "','"+'CUSTOMER'+ "')";
 
           mysqlConnection.query(sql, function (err, result) {
-            res.status(200).send({
-              message: 'Registrado'
-            });
+            if (!err) {
+              res.status(200).send({
+                message: 'Registrado'
+              });
+            }else{
+              res.status(500).send({
+                message: err
+              });
+            }
           });
         });
       }
