@@ -47,10 +47,10 @@ router.get('/admin/salesFail', md_auth.ensureAuth, (req, res) => {
 router.get('/admin/getchars/:id', md_auth.ensureAuth, (req, res) => {
     const { id } = req.params;
         mysqlConnection.query("SELECT count(*) from salesorder where month(deliverydate)= ?", [id], function (error, results, fields) {
-            if (!err) {
+            if (!error) {
                 res.json(results);
             } else {
-                console.log(err);
+                console.log(error);
             }
         });
 });
