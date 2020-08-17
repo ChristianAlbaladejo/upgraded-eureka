@@ -114,6 +114,16 @@ router.get('/admin/getUsers/', md_auth.ensureAuth, (req, res) => {
             res.json(results);
         })
 });
+router.get('/admin/getchars/', md_auth.ensureAuth, (req, res) => {
+    const char = []
+    for (let i = 0; i < 12; i++) {     
+        mysqlConnection.query("SELECT count(*) as total from salesorder where month(deliverydate)= "+i+";", function (error, results, fields) {
+            char.push(results)
+            console.log(results)
+        });
+    }
+    res.json(char);
+});
 
 router.post('/admin/login', function (req, response) {
     if (req.body) {
