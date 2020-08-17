@@ -78,6 +78,7 @@ router.get('/admin/returnUser/:id', md_auth.ensureAuth, (req, res) => {
     const { id } = req.params;
     mysqlConnection.query('SELECT * FROM user WHERE id = ?', [id], (err, rows, fields) => {
         if (!err) {
+            rows[0]['password'] = undefined;
             res.json(rows);
         } else {
             console.log(err);
@@ -109,6 +110,7 @@ router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
 
 router.get('/admin/getUsers/', md_auth.ensureAuth, (req, res) => {
         mysqlConnection.query("SELECT * FROM user", function (error, results, fields) {
+            results[0]['password'] = undefined;
             res.json(results);
         })
 });
