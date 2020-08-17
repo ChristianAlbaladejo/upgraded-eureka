@@ -99,22 +99,23 @@ router.put('/admin/updateOrder/:order', md_auth.ensureAuth, (req, res) => {
 router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
     const  products  = req.body.products;
    let  p = JSON.parse(products)
-    /* mysqlConnection.query("TRUNCATE TABLE product;"); */
    for (let i = 0; i < p.length; i++) {
-       
        mysqlConnection.query("UPDATE product set notes ='" + p[i].notes + "', costPrice = '" + p[i].costPrice +"' WHERE id = '"+p[i].id+"'", function (error, results, fields) {
            console.log(error, results, fields);
        })
    }
     res.json(products);
-    /* mysqlConnection.query("truncate customer;") */
-    /* mysqlConnection.query("UPDATE salesorder set sended = 'true' WHERE id=?", [order], (err, rows, fields) => {
-        if (!err) {
-            res.json(rows);
-        } else {
-            console.log(err);
-        }
-    }); */
+});
+
+router.get('/admin/getUsers/', md_auth.ensureAuth, (req, res) => {
+    const products = req.body.products;
+    let p = JSON.parse(products)
+    for (let i = 0; i < p.length; i++) {
+        mysqlConnection.query("SELECT * FROM users", function (error, results, fields) {
+            console.log(error, results, fields);
+        })
+    }
+    res.json(products);
 });
 
 router.post('/admin/login', function (req, response) {
