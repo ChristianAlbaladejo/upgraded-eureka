@@ -150,7 +150,7 @@ router.post('/register', function (req, res) {
       else {
         bcrypt.hash(params.password, 10, function (err, hash) {
           params.password = hash;
-          var sql = "INSERT INTO `customer`(`id`,`fiscalName`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`,`role`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "','"+'CUSTOMER'+ "')";
+          var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`,`role`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "','"+'CUSTOMER'+ "')";
 
           mysqlConnection.query(sql, function (err, result) {
             if (!err) {
