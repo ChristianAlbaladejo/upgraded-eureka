@@ -99,7 +99,7 @@ router.put('/admin/updateOrder/:order', md_auth.ensureAuth, (req, res) => {
 router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
     const  products  = req.body.products;
    let  p = JSON.parse(products)
-    mysqlConnection.query("TRUNCATE TABLE product;");
+    /* mysqlConnection.query("TRUNCATE TABLE product;"); */
    for (let i = 0; i < p.length; i++) {
        
        mysqlConnection.query("UPDATE products set notes ='" + p[i].notes + "', costPrice = '" + p[i].costPrice +"' WHERE id = '"+p[i].id+"'", function (error, results, fields) {
