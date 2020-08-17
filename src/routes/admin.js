@@ -44,6 +44,17 @@ router.get('/admin/salesFail', md_auth.ensureAuth, (req, res) => {
     });
 });
 
+router.get('/admin/getchars/:id', md_auth.ensureAuth, (req, res) => {
+    const { id } = req.params;
+        mysqlConnection.query("SELECT count(*) from salesorder where month(deliverydate)= ?", [id], function (error, results, fields) {
+            if (!err) {
+                res.json(rows);
+            } else {
+                console.log(err);
+            }
+        });
+});
+
 router.get('/admin/totalRevenue', md_auth.ensureAuth, (req, res) => {
     mysqlConnection.query('SELECT SUM(grossAmount) FROM salesOrder', (err, rows, fields) => {
         if (!err) {
@@ -113,14 +124,6 @@ router.get('/admin/getUsers/', md_auth.ensureAuth, (req, res) => {
             results[0]['password'] = undefined;
             res.json(results);
         })
-});
-router.get('/admin/getchars/:id', md_auth.ensureAuth, (req, res) => {
-    const { id } = req.params;
-    for (let i = 0; i < 12; i++) {     
-        mysqlConnection.query("SELECT count(*) from salesorder where month(deliverydate)= ?", [id] , function (error, results, fields) {
-                res.json(results[0]['count(*)']);
-        });
-    }
 });
 
 router.post('/admin/login', function (req, response) {
