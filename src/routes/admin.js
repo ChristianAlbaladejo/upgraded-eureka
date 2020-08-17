@@ -108,7 +108,7 @@ router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
 });
 
 router.get('/admin/getUsers/', md_auth.ensureAuth, (req, res) => {
-        mysqlConnection.query("SELECT * FROM users", function (error, results, fields) {
+        mysqlConnection.query("SELECT * FROM user", function (error, results, fields) {
             console.log(error, results, fields);
         })
     res.json(products);
