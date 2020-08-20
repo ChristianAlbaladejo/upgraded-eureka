@@ -45,7 +45,7 @@ router.get('/admin/salesFail', md_auth.ensureAuth, (req, res) => {
 });
 
 router.get('/admin/getAllOrders', md_auth.ensureAuth, (req, res) => {
-    mysqlConnection.query("SELECT salesorder.id, salesorder.orderLines, salesorder.userId, salesorder.deliverydate, salesorder.date, salesorder.orderNotes, salesorder.chargesType, salesorder.sended, user.id, user.name, user.lastname, user.email  FROM salesorder INNER JOIN user ON user.id=salesorder.userId", (err, rows, fields) => {
+    mysqlConnection.query("SELECT salesorder.id, salesorder.orderLines, salesorder.userId, salesorder.deliverydate, salesorder.date, salesorder.orderNotes, salesorder.chargesType, salesorder.sended, user.name, user.lastname, user.email  FROM salesorder INNER JOIN user ON user.id=salesorder.userId", (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
