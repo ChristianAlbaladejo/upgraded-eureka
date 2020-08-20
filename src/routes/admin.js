@@ -45,7 +45,7 @@ router.get('/admin/salesFail', md_auth.ensureAuth, (req, res) => {
 });
 
 router.get('/admin/getAllOrders', md_auth.ensureAuth, (req, res) => {
-    mysqlConnection.query("SELECT * FROM salesorder INNER JOIN user ON salesorder.userId = user.id", (err, rows, fields) => {
+    mysqlConnection.query("SELECT * FROM salesorder INNER JOIN user ON user.id=salesorder.userId ", (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
