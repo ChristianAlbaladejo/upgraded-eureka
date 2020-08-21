@@ -35,7 +35,7 @@ router.get('/admin/sales/:sord?', md_auth.ensureAuth, (req, res) => {
 });
 
 router.get('/admin/salesFail', md_auth.ensureAuth, (req, res) => {
-    mysqlConnection.query("SELECT * FROM salesOrder where sended = 'false'", (err, rows, fields) => {
+    mysqlConnection.query("SELECT * FROM salesOrder where sended = 'false' order by id DESC", (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
