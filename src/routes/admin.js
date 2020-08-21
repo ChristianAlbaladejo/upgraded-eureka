@@ -45,7 +45,17 @@ router.get('/admin/salesFail', md_auth.ensureAuth, (req, res) => {
 });
 
 router.get('/admin/getAllOrders', md_auth.ensureAuth, (req, res) => {
-    mysqlConnection.query("SELECT salesorder.id, salesorder.orderLines, salesorder.grossAmount ,salesorder.userId, salesorder.deliverydate, salesorder.date, salesorder.orderNotes, salesorder.chargesType, salesorder.sended, user.name, user.lastname, user.email  FROM salesorder INNER JOIN user ON user.id=salesorder.userId", (err, rows, fields) => {
+    mysqlConnection.query("SELECT salesorder.id, salesorder.orderLines, salesorder.grossAmount ,salesorder.userId, salesorder.deliverydate, salesorder.date, salesorder.orderNotes, salesorder.chargesType, salesorder.sended, user.name, user.lastname, user.email  FROM salesorder INNER JOIN user ON user.id=salesorder.userId order by id DESC ", (err, rows, fields) => {
+        if (!err) {
+            res.json(rows);
+        } else {
+            console.log(err);
+        }
+    });
+});
+
+router.get('/admin/getAllOrdersShort', md_auth.ensureAuth, (req, res) => {
+    mysqlConnection.query("SELECT salesorder.id, salesorder.orderLines, salesorder.grossAmount ,salesorder.userId, salesorder.deliverydate, salesorder.date, salesorder.orderNotes, salesorder.chargesType, salesorder.sended, user.name, user.lastname, user.email  FROM salesorder INNER JOIN user ON user.id=salesorder.userId order by id DESC LIMIT 5", (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
