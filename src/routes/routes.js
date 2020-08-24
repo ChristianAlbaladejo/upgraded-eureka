@@ -216,7 +216,7 @@ router.delete('/removeFavorite', (req, res) => {
   });
 });
 
-router.post('/getFavorites', (req, res) => {
+router.get('/getFavorites', (req, res) => {
   var params = req.body;
   mysqlConnection.query("SELECT FROM `favorite` WHERE `userId` = '" + params.userId + "';", (err, rows, fields) => {
     if (!err) {
