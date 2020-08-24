@@ -218,7 +218,7 @@ router.delete('/removeFavorite/:productId/:userId', (req, res) => {
 
 router.get('/getFavorites/:userId', (req, res) => {
   var params = req.params;
-  mysqlConnection.query("SELECT * FROM `favorite` WHERE `userId` = " + params.userId + ";", (err, rows, fields) => {
+  mysqlConnection.query("SELECT * FROM `favorite` INNER JOIN product ON favorite.productId = product.id WHERE `userId` = " + params.userId + ";", (err, rows, fields) => {
     if (!err) {
       res.json(rows);
     } else {
@@ -229,7 +229,7 @@ router.get('/getFavorites/:userId', (req, res) => {
 
 router.get('/checkFavorite/:productId/:userId', (req, res) => {
   var params = req.params;
-  mysqlConnection.query("SELECT * FROM `favorite` WHERE `userId` = " + params.userId + " AND `productId` = "+params.productId+";", (err, rows, fields) => {
+  mysqlConnection.query("SELECT * FROM `favorite` INNER JOIN product ON favorite.productId = product.id WHERE `userId` = " + params.userId + " AND `productId` = "+params.productId+";", (err, rows, fields) => {
     if (!err) {
       res.json(rows);
     } else {
