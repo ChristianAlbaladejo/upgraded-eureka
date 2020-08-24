@@ -196,7 +196,7 @@ router.get('/lastCustomer', (req, res) => {
 
 router.post('/addFavorite', (req, res) => {
   var params = req.body;
-  mysqlConnection.query("INSERT INTO `favorite`(`productId`,`userId`) VALUES ('" + params.productId + "','" + params.userId + "';", (err, rows, fields) => {
+  mysqlConnection.query("INSERT INTO `favorite`(`productId`,`userId`) VALUES (" + params.productId + "," + params.userId + ";", (err, rows, fields) => {
     if (!err) {
       res.json(rows);
     } else {
@@ -207,7 +207,7 @@ router.post('/addFavorite', (req, res) => {
 
 router.delete('/removeFavorite', (req, res) => {
   var params = req.body;
-  mysqlConnection.query("DELETE FROM `favorite` WHERE `productId` = '" + params.productId + "', `userId` = '" + this.params.userId + "';", (err, rows, fields) => {
+  mysqlConnection.query("DELETE FROM `favorite` WHERE `productId` = " + params.productId + ", `userId` = " + this.params.userId + ";", (err, rows, fields) => {
     if (!err) {
       res.json(rows);
     } else {
@@ -218,7 +218,7 @@ router.delete('/removeFavorite', (req, res) => {
 
 router.get('/getFavorites', (req, res) => {
   var params = req.body;
-  mysqlConnection.query("SELECT FROM `favorite` WHERE `userId` = '" + params.userId + "';", (err, rows, fields) => {
+  mysqlConnection.query("SELECT FROM `favorite` WHERE `userId` = " + params.userId + ";", (err, rows, fields) => {
     if (!err) {
       res.json(rows);
     } else {
