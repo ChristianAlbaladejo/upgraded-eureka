@@ -196,7 +196,7 @@ router.get('/lastCustomer', (req, res) => {
 
 router.post('/addFavorite', (req, res) => {
   var params = req.body;
-  mysqlConnection.query("INSERT INTO `favorite`(`productId`,`userId`) VALUES (" + params.productId + "," + params.userId + ";", (err, rows, fields) => {
+  mysqlConnection.query("INSERT INTO `favorite`(`productId`,`userId`) VALUES (" + params.productId + "," + params.userId + ");", (err, rows, fields) => {
     if (!err) {
       res.json(rows);
     } else {
