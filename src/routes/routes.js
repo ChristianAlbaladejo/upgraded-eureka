@@ -72,7 +72,7 @@ router.post('/order', md_auth.ensureAuth, (req, res) => {
   if (req.body) {
     var post = req.body;
     console.log(req.body);
-    mysqlConnection.query('INSERT INTO salesorder(orderLines, cashDiscount, grossAmount, surchargeRate, netAmount, vatAmount, surchargeAmount, userId ,sended,date,chargesType,deliverydate, orderNotes) VALUES( ' + '"' + post.orderLines + '"' + ',' + '"' + post.cashDiscount + '"' + ',' + '"' + post.grossAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.netAmount + '"' + ',' + '"' + post.vatAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.userId + '"' + ',' + '"' + post.sended + '"' + ',' + '"' + fechaEnMiliseg + '"' + ',' + '"' + post.chargesType + '"' + ',' + '"' +post.deliveryDate + '"' + ',' + '"' +post.orderNotes + '"' + ');', (err, rows, fields) => {
+    mysqlConnection.query('INSERT INTO salesorder(orderLines, cashDiscount, grossAmount, surchargeRate, netAmount, vatAmount, surchargeAmount, userId ,sended,date,chargesType,deliverydate, orderNotes) VALUES( ' + '"' + post.orderLines + '"' + ',' + '"' + post.cashDiscount + '"' + ',' + '"' + post.grossAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.netAmount + '"' + ',' + '"' + post.vatAmount + '"' + ',' + '"' + post.surchargeAmount + '"' + ',' + '"' + post.userId + '"' + ',' + '"' + post.sended + '"' + ',' + '"' + fechaEnMiliseg + '"' + ',' + '"' + post.chargesType + '"' + ',' + '"' + post.deliveryDate + '"' + ',' + '"' + post.orderNotes + '"' + ');', (err, rows, fields) => {
       if (!err) {
         res.json({ status: 'order Saved' });
         var transporter = nodemailer.createTransport({
@@ -114,20 +114,20 @@ router.post('/login', function (req, response) {
     mysqlConnection.query('SELECT * FROM user WHERE email = ?', [email], function (error, results, fields) {
       console.log(results);
       if (results.length != 0 && results[0]['role'] == 'CUSTOMER') {
-      bcrypt.compare(password, results[0]['password'], (err, check) => {
-        if (check) {
-          //generar y devolver token
-          results[0]['password'] = undefined;
-          return response.status(200).send({
-            token: jwt.createToken(results[0]['id']),
-            user: results
-          });
+        bcrypt.compare(password, results[0]['password'], (err, check) => {
+          if (check) {
+            //generar y devolver token
+            results[0]['password'] = undefined;
+            return response.status(200).send({
+              token: jwt.createToken(results[0]['id']),
+              user: results
+            });
 
-        } else {
-          return response.status(404).send({ message: 'El usuario no se ha podido identificar' });
-        }
-      });
-      }else{
+          } else {
+            return response.status(404).send({ message: 'El usuario no se ha podido identificar' });
+          }
+        });
+      } else {
         return response.status(404).send({ message: 'El usuario no existe' });
       }
     });
@@ -150,14 +150,14 @@ router.post('/register', function (req, res) {
       else {
         bcrypt.hash(params.password, 10, function (err, hash) {
           params.password = hash;
-          var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`,`role`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "','"+'CUSTOMER'+ "')";
+          var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`,`role`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "','" + 'CUSTOMER' + "')";
 
           mysqlConnection.query(sql, function (err, result) {
             if (!err) {
               res.status(200).send({
                 message: 'Registrado'
               });
-            }else{
+            } else {
               res.status(500).send({
                 message: err
               });
@@ -193,6 +193,40 @@ router.get('/lastCustomer', (req, res) => {
     }
   });
 });
+
+router.post('/addFavorite', (req, res) => {
+  var params = req.body;
+  mysqlConnection.query("INSERT INTO `favorite`(`productId`,`userId`) VALUES ('" + params.productId + "','" + params.userId + "';", (err, rows, fields) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
+
+router.delete('/removeFavorite', (req, res) => {
+  var params = req.body;
+  mysqlConnection.query("DELETE FROM `favorite` WHERE `productId` = '" + params.productId + "', `userId` = '" + this.params.userId + "';", (err, rows, fields) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
+
+router.post('/getFavorites', (req, res) => {
+  var params = req.body;
+  mysqlConnection.query("SELECT FROM `favorite` WHERE `userId` = '" + params.userId + "';", (err, rows, fields) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
+
 
 //filter search
 router.get('/filter/:filter?', (req, res) => {
