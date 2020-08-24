@@ -206,7 +206,7 @@ router.post('/addFavorite', (req, res) => {
 });
 
 router.delete('/removeFavorite/:productId/:userId', (req, res) => {
-  var params = req.parmas;
+  var params = req.params;
   mysqlConnection.query("DELETE FROM `favorite` WHERE productId = " + params.productId + " AND userId= " + params.userId + ";", (err, rows, fields) => {
     if (!err) {
       res.json(rows);
@@ -218,7 +218,6 @@ router.delete('/removeFavorite/:productId/:userId', (req, res) => {
 
 router.get('/getFavorites/:userId', (req, res) => {
   var params = req.params;
-  console.log(params)
   mysqlConnection.query("SELECT * FROM `favorite` WHERE `userId` = " + params.userId + ";", (err, rows, fields) => {
     if (!err) {
       res.json(rows);
