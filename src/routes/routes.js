@@ -227,6 +227,17 @@ router.get('/getFavorites', (req, res) => {
   });
 });
 
+router.get('/checkFavorites', (req, res) => {
+  var params = req.body;
+  mysqlConnection.query("SELECT * FROM `favorite` WHERE `userId` = " + params.userId + " AND `productId` = "+params.productId+";", (err, rows, fields) => {
+    if (!err) {
+      res.json(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
+
 
 //filter search
 router.get('/filter/:filter?', (req, res) => {
