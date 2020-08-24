@@ -205,8 +205,8 @@ router.post('/addFavorite', (req, res) => {
   });
 });
 
-router.delete('/removeFavorite', (req, res) => {
-  var params = req.body;
+router.delete('/removeFavorite/:productId/:userid', (req, res) => {
+  var params = req.parmas;
   mysqlConnection.query("DELETE FROM `favorite` WHERE productId = " + params.productId + " AND userId= " + params.userId + ";", (err, rows, fields) => {
     if (!err) {
       res.json(rows);
@@ -216,8 +216,8 @@ router.delete('/removeFavorite', (req, res) => {
   });
 });
 
-router.get('/getFavorites', (req, res) => {
-  var params = req.body;
+router.get('/getFavorites/:productId/:userid', (req, res) => {
+  var params = req.params;
   mysqlConnection.query("SELECT * FROM `favorite` WHERE `userId` = " + params.userId + ";", (err, rows, fields) => {
     if (!err) {
       res.json(rows);
@@ -227,8 +227,8 @@ router.get('/getFavorites', (req, res) => {
   });
 });
 
-router.get('/checkFavorites', (req, res) => {
-  var params = req.body;
+router.get('/checkFavorite/:productId/:userid', (req, res) => {
+  var params = req.params;
   mysqlConnection.query("SELECT * FROM `favorite` WHERE `userId` = " + params.userId + " AND `productId` = "+params.productId+";", (err, rows, fields) => {
     if (!err) {
       res.json(rows);
@@ -237,7 +237,6 @@ router.get('/checkFavorites', (req, res) => {
     }
   });
 });
-
 
 //filter search
 router.get('/filter/:filter?', (req, res) => {
