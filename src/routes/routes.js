@@ -10,7 +10,16 @@ var moment = require('moment');
 
 const mysqlConnection = require('../mysql-con.js');
 var secret = 'fe1a1915a379f3be5394b64d14794932-1506868106675';
-// GET all families
+
+/**
+* @swagger
+* /:
+*  get:
+*    description: Retorna todas las familias
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.get('/', (req, res) => {
   mysqlConnection.query('SELECT * FROM family', (err, rows, fields) => {
     if (!err) {
@@ -22,6 +31,15 @@ router.get('/', (req, res) => {
 });
 
 // filteriring families 
+/**
+* @swagger
+* /products/:families:
+*  get:
+*    description: Retorna todas los productos ordenados por su familia
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.get('/products/:families', (req, res) => {
   const { families } = req.params;
   mysqlConnection.query('SELECT * FROM product WHERE familyId = ?', [families], (err, rows, fields) => {
@@ -32,6 +50,16 @@ router.get('/products/:families', (req, res) => {
     }
   });
 });
+
+/**
+* @swagger
+* /products:
+*  get:
+*    description: Retorna todas los productos
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.get('/products', (req, res) => {
   mysqlConnection.query('SELECT * FROM product', (err, rows, fields) => {
     if (!err) {
@@ -42,6 +70,15 @@ router.get('/products', (req, res) => {
   });
 });
 
+/**
+* @swagger
+* /products/:id:
+*  get:
+*    description: Retorna un producto introduciendole su id
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.get('/product/:id', (req, res) => {
   const { id } = req.params;
   mysqlConnection.query('SELECT * FROM product WHERE id = ?', [id], (err, rows, fields) => {
@@ -53,6 +90,15 @@ router.get('/product/:id', (req, res) => {
   });
 });
 
+/**
+* @swagger
+* /familiName/:id:
+*  get:
+*    description: Retorna el nombre de la familia por id
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.get('/familiName/:id', (req, res) => {
   const { id } = req.params;
   mysqlConnection.query('SELECT name FROM family WHERE id = ?', [id], (err, rows, fields) => {
@@ -64,8 +110,71 @@ router.get('/familiName/:id', (req, res) => {
   });
 });
 
-
-// INSERT a order
+/**
+* @swagger
+* /order:
+*    post:
+*      summary: "Order"
+*      description: "Hacer un pedido"
+*      operationId: ""
+*      consumes:
+*      - "application/json"
+*      produces:
+*      - "application/xml"
+*      - "application/json"
+*      parameters:
+*      - in: "body"
+*        name: "body"
+*        description: "objeto para registrar un nuevo orden"
+*        required: true
+*        schema:
+*          $ref: "#/definitions/order"
+*      responses:
+*        "405":
+*          description: "Invalid input"
+* definitions:
+*  order:
+*    type: "object"
+*    properties:
+*      orderLines:
+*        type: "string"
+*        format: "orderLines"
+*      cashDiscount:
+*        type: "string"
+*        format: "cashDiscount"
+*      grossAmount:
+*        type: "string"
+*        format: "grossAmount"
+*      surchargeRate:
+*        type: "string"
+*        format: "surchargeRate"
+*      netAmount:
+*        type: "string"
+*        description: "netAmount"
+*      vatAmount:
+*        type: "string"
+*        description: "vatAmount"
+*      surchargeAmount:
+*        type: "string"
+*        description: "surchargeAmount"
+*      sended:
+*        type: "string"
+*        description: "sended"
+*      email:
+*        type: "string"
+*        description: "email"
+*      deliveryDate:
+*        type: "string"
+*        description: "deliveryDate"
+*      orderNotes:
+*        type: "string"
+*        description: "orderNotes"
+*      chargesType:
+*        type: "string"
+*        description: "chargesType"
+*    json:
+*      name: "Login"
+*/
 router.post('/order', md_auth.ensureAuth, (req, res) => {
   var fechaEnMiliseg = new Date().toISOString()
   console.log(fechaEnMiliseg)
@@ -103,6 +212,62 @@ router.post('/order', md_auth.ensureAuth, (req, res) => {
   }
 });
 
+/**
+* @swagger
+* /login:
+*    post:
+*      summary: "Log-in"
+*      description: "Log-in de un usuario ya registrado"
+*      operationId: ""
+*      consumes:
+*      - "application/json"
+*      produces:
+*      - "application/xml"
+*      - "application/json"
+*      parameters:
+*      - in: "body"
+*        name: "body"
+*        description: "objeto de un usuario para el log-in"
+*        required: true
+*        schema:
+*          $ref: "#/definitions/login"
+*      responses:
+*        "405":
+*          description: "Invalid input"
+* definitions:
+*  login:
+*    type: "object"
+*    properties:
+*      name:
+*        type: "string"
+*        format: "name"
+*      lastname:
+*        type: "string"
+*        format: "LastName"
+*      password:
+*        type: "string"
+*        format: "Password"
+*      CIF:
+*        type: "string"
+*        format: "CIF"
+*      calle:
+*        type: "string"
+*        description: "calle"
+*      CP:
+*        type: "string"
+*        description: "CP"
+*      poblacion:
+*        type: "string"
+*        description: "poblacion"
+*      email:
+*        type: "string"
+*        description: "email"
+*      telefono:
+*        type: "string"
+*        description: "telefono"
+*    json:
+*      name: "Login"
+*/
 router.post('/login', function (req, response) {
   if (req.body) {
     var params = req.body;
@@ -136,6 +301,62 @@ router.post('/login', function (req, response) {
   }
 });
 
+/**
+* @swagger
+* /register:
+*    post:
+*      summary: "Register"
+*      description: "Registro de un usuario ya registrado"
+*      operationId: ""
+*      consumes:
+*      - "application/json"
+*      produces:
+*      - "application/xml"
+*      - "application/json"
+*      parameters:
+*      - in: "body"
+*        name: "body"
+*        description: "objeto de un usuario para el registro"
+*        required: true
+*        schema:
+*          $ref: "#/definitions/login"
+*      responses:
+*        "405":
+*          description: "Invalid input"
+* definitions:
+*  login:
+*    type: "object"
+*    properties:
+*      name:
+*        type: "string"
+*        format: "name"
+*      lastname:
+*        type: "string"
+*        format: "LastName"
+*      password:
+*        type: "string"
+*        format: "Password"
+*      CIF:
+*        type: "string"
+*        format: "CIF"
+*      calle:
+*        type: "string"
+*        description: "calle"
+*      CP:
+*        type: "string"
+*        description: "CP"
+*      poblacion:
+*        type: "string"
+*        description: "poblacion"
+*      email:
+*        type: "string"
+*        description: "email"
+*      telefono:
+*        type: "string"
+*        description: "telefono"
+*    json:
+*      name: "Login"
+*/
 router.post('/register', function (req, res) {
   var params = req.body;
   if (params.name && params.lastname && params.password && params.CIF && params.calle && params.CP && params.telefono && params.poblacion && params.email) {
@@ -173,7 +394,15 @@ router.post('/register', function (req, res) {
   }
 });
 
-
+/**
+* @swagger
+* /lastOrder:
+*  get:
+*    description: Obtener el ultimo order que se ha realizado para saber cual poner al insertar el nuevo orden que se realice
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.get('/lastOrder', (req, res) => {
   mysqlConnection.query('SELECT MAX(id) FROM salesorder;', (err, rows, fields) => {
     if (!err) {
@@ -184,6 +413,15 @@ router.get('/lastOrder', (req, res) => {
   });
 });
 
+/**
+* @swagger
+* /lastCustomer:
+*  get:
+*    description: Obtener el ultimo cliente que se ha realizado para saber cual poner al insertar el nuevo cliente que se realice
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.get('/lastCustomer', (req, res) => {
   mysqlConnection.query('SELECT MAX(id) FROM customer;', (err, rows, fields) => {
     if (!err) {
@@ -194,6 +432,41 @@ router.get('/lastCustomer', (req, res) => {
   });
 });
 
+/**
+* @swagger
+* /addFavorite:
+*    post:
+*      summary: "Añadir a favoritos"
+*      description: "Añadir un producto a la lista de favoritos"
+*      operationId: ""
+*      consumes:
+*      - "application/json"
+*      produces:
+*      - "application/xml"
+*      - "application/json"
+*      parameters:
+*      - in: "body"
+*        name: "body"
+*        description: "objeto de un usuario para el log-in"
+*        required: true
+*        schema:
+*          $ref: "#/definitions/fav"
+*      responses:
+*        "405":
+*          description: "Invalid input"
+* definitions:
+*  fav:
+*    type: "object"
+*    properties:
+*      productId:
+*        type: "integer"
+*        format: "int64"
+*      userId:
+*        type: "integer"
+*        format: "int64"
+*    json:
+*      name: "fav"
+*/
 router.post('/addFavorite', (req, res) => {
   var params = req.body;
   console.log(params)
@@ -206,6 +479,15 @@ router.post('/addFavorite', (req, res) => {
   });
 });
 
+/**
+* @swagger
+* /removeFavorite/:productId/:userId:
+*  delete:
+*    description: Eliminar un producto de la lista de favoritos
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.delete('/removeFavorite/:productId/:userId', (req, res) => {
   var params = req.params;
   mysqlConnection.query("DELETE FROM `favorite` WHERE productId = " + params.productId + " AND userId= " + params.userId + ";", (err, rows, fields) => {
@@ -217,6 +499,15 @@ router.delete('/removeFavorite/:productId/:userId', (req, res) => {
   });
 });
 
+/**
+* @swagger
+* /getFavorites/:userId:
+*  get:
+*    description: Retorna todos los productos del usuario que se le pase y que esten en la tabla de favoritos
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.get('/getFavorites/:userId', (req, res) => {
   var params = req.params;
   mysqlConnection.query("SELECT * FROM `favorite` INNER JOIN product ON favorite.productId = product.id WHERE `userId` = " + params.userId + ";", (err, rows, fields) => {
@@ -228,6 +519,15 @@ router.get('/getFavorites/:userId', (req, res) => {
   });
 });
 
+/**
+* @swagger
+* /checkFavorite/:productId/:userId:
+*  get:
+*    description: Endpoint para comprobar si un producto existe en la tabla de favoritos
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.get('/checkFavorite/:productId/:userId', (req, res) => {
   var params = req.params;
   mysqlConnection.query("SELECT * FROM `favorite` INNER JOIN product ON favorite.productId = product.id WHERE `userId` = " + params.userId + " AND `productId` = "+params.productId+";", (err, rows, fields) => {
@@ -239,7 +539,15 @@ router.get('/checkFavorite/:productId/:userId', (req, res) => {
   });
 });
 
-//filter search
+/**
+* @swagger
+* /filter/:filter?:
+*  get:
+*    description: filtro para productos
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.get('/filter/:filter?', (req, res) => {
   let filter
   if (req.params.filter) {
@@ -256,7 +564,15 @@ router.get('/filter/:filter?', (req, res) => {
   });
 });
 
-//filter search by product name
+/**
+* @swagger
+* /filterByName/:filter?/:family?:
+*  get:
+*    description: filtro para familias
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.get('/filterByName/:filter?/:family?', (req, res) => {
   let filter
   let family
@@ -275,6 +591,42 @@ router.get('/filterByName/:filter?/:family?', (req, res) => {
     }
   });
 });
+
+/**
+* @swagger
+* /charge:
+*    post:
+*      summary: "Pagos por tarjeta de credito"
+*      description: "Añadir un pago por tarjeta de credito mediante stripe"
+*      operationId: ""
+*      consumes:
+*      - "application/json"
+*      produces:
+*      - "application/xml"
+*      - "application/json"
+*      parameters:
+*      - in: "body"
+*        name: "body"
+*        description: "objeto de un usuario para el log-in"
+*        required: true
+*        schema:
+*          $ref: "#/definitions/stripe"
+*      responses:
+*        "405":
+*          description: "Invalid input"
+* definitions:
+*  stripe:
+*    type: "object"
+*    properties:
+*      stripeToken:
+*        type: "string"
+*        format: "Token Stripe"
+*      amount:
+*        type: "string"
+*        format: "amount * 100"
+*    json:
+*      name: "stripe"
+*/
 router.post('/charge', function (req, res) {
   const stripe = require("stripe")("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");
   const stripToken = req.body.stripeToken;
@@ -303,6 +655,15 @@ router.post('/charge', function (req, res) {
   );
 });
 
+/**
+* @swagger
+* /salesorders/:id:
+*  get:
+*    description: Retorna todos los pedidos realizados por el usuaruio
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.get('/salesorders/:id', md_auth.ensureAuth, (req, res) => {
   let id
   if (req.params.id) {
@@ -319,6 +680,15 @@ router.get('/salesorders/:id', md_auth.ensureAuth, (req, res) => {
   });
 });
 
+/**
+* @swagger
+* /forgotpassword:
+*  get:
+*    description: Recuperar contraseña de usuarios
+*    responses:
+*      '200':
+*        description:  Ok
+*/
 router.get('/forgotpassword', function (req, res) {
   res.send('<form action="/passwordreset" method="POST">' +
     '<input type="email" name="email" value="" placeholder="Enter your email address..." />' +
@@ -441,5 +811,262 @@ router.post('/resetpassword', function (req, res) {
   });
   res.send('Your password has been successfully changed.');
 });
+
+/**
+* @swagger
+* /admin/sales/:sord?:
+*  get:
+*    description: Devuelve los primeros pedidos realizados en la tienda 
+*    responses:
+*      '200':
+*        description:  Ok
+*/
+
+/**
+* @swagger
+* /admin/salesFail:
+*  get:
+*    description: Devuelve los pedidos fallidos que se han realizado en la tienda
+*    responses:
+*      '200':
+*        description:  Ok
+*/
+
+/**
+* @swagger
+* /admin/getAllOrders:
+*  get:
+*    description: Devuelve todos los pedidos que se han realizado en la tienda
+*    responses:
+*      '200':
+*        description:  Ok
+*/
+
+/**
+* @swagger
+* /admin/getAllOrdersShort:
+*  get:
+*    description: Devuelve todos los pedidos que se han realizado en la tienda limitados a los 5 primeros
+*    responses:
+*      '200':
+*        description:  Ok
+*/
+
+/**
+* @swagger
+* /admin/getchars/:id':
+*  get:
+*    description: Datos pata rellenar las gráficas
+*    responses:
+*      '200':
+*        description:  Ok
+*/
+
+/**
+* @swagger
+* /admin/totalRevenue:
+*  get:
+*    description: Total ganado 
+*    responses:
+*      '200':
+*        description:  Ok
+*/
+
+/**
+* @swagger
+* /admin/totalUser:
+*  get:
+*    description: Total de usuarios
+*    responses:
+*      '200':
+*        description:  Ok
+*/
+
+/**
+* @swagger
+* /admin/totalSales:
+*  get:
+*    description: Numero de ventas realizadas en total
+*    responses:
+*      '200':
+*        description:  Ok
+*/
+
+/**
+* @swagger
+* /admin/returnUser/:id:
+*  get:
+*    description: Retorna el usuario que tena ese id
+*    responses:
+*      '200':
+*        description:  Ok
+*/
+
+/**
+* @swagger
+* /admin/updateOrder/:order:
+*  put:
+*    description: Actualiza el estado de un pedido realizado 
+*    responses:
+*      '200':
+*        description:  Ok
+*/
+
+/**
+* @swagger
+* /admin/updateProducts:
+*    post:
+*      summary: "Actualizar un producto"
+*      description: "Actualizar un producto fallido"
+*      operationId: ""
+*      consumes:
+*      - "application/json"
+*      produces:
+*      - "application/xml"
+*      - "application/json"
+*      parameters:
+*      - in: "body"
+*        name: "body"
+*        description: "objeto de un usuario para el log-in"
+*        required: true
+*        schema:
+*          $ref: "#/definitions/updateProducts"
+*      responses:
+*        "405":
+*          description: "Invalid input"
+* definitions:
+*  updateProducts:
+*    type: "object"
+*    properties:
+*      products:
+*        type: "string"
+*        format: "carrito"
+*    json:
+*      name: "updateProducts"
+*/
+
+/**
+* @swagger
+* /admin/getUsers:
+*  get:
+*    description: Retorna el listado de usuarios
+*    responses:
+*      '200':
+*        description:  Ok
+*/
+
+/**
+* @swagger
+* /admin/login:
+*    post:
+*      summary: "Log-in"
+*      description: "Log-in de un usuario ya registrado"
+*      operationId: ""
+*      consumes:
+*      - "application/json"
+*      produces:
+*      - "application/xml"
+*      - "application/json"
+*      parameters:
+*      - in: "body"
+*        name: "body"
+*        description: "objeto de un usuario para el log-in"
+*        required: true
+*        schema:
+*          $ref: "#/definitions/login"
+*      responses:
+*        "405":
+*          description: "Invalid input"
+* definitions:
+*  login:
+*    type: "object"
+*    properties:
+*      name:
+*        type: "string"
+*        format: "name"
+*      lastname:
+*        type: "string"
+*        format: "LastName"
+*      password:
+*        type: "string"
+*        format: "Password"
+*      CIF:
+*        type: "string"
+*        format: "CIF"
+*      calle:
+*        type: "string"
+*        description: "calle"
+*      CP:
+*        type: "string"
+*        description: "CP"
+*      poblacion:
+*        type: "string"
+*        description: "poblacion"
+*      email:
+*        type: "string"
+*        description: "email"
+*      telefono:
+*        type: "string"
+*        description: "telefono"
+*    json:
+*      name: "Login"
+*/
+
+/**
+* @swagger
+* /admin/register:
+*    post:
+*      summary: "Register"
+*      description: "Registro de un usuario ya registrado"
+*      operationId: ""
+*      consumes:
+*      - "application/json"
+*      produces:
+*      - "application/xml"
+*      - "application/json"
+*      parameters:
+*      - in: "body"
+*        name: "body"
+*        description: "objeto de un usuario para el registro"
+*        required: true
+*        schema:
+*          $ref: "#/definitions/login"
+*      responses:
+*        "405":
+*          description: "Invalid input"
+* definitions:
+*  login:
+*    type: "object"
+*    properties:
+*      name:
+*        type: "string"
+*        format: "name"
+*      lastname:
+*        type: "string"
+*        format: "LastName"
+*      password:
+*        type: "string"
+*        format: "Password"
+*      CIF:
+*        type: "string"
+*        format: "CIF"
+*      calle:
+*        type: "string"
+*        description: "calle"
+*      CP:
+*        type: "string"
+*        description: "CP"
+*      poblacion:
+*        type: "string"
+*        description: "poblacion"
+*      email:
+*        type: "string"
+*        description: "email"
+*      telefono:
+*        type: "string"
+*        description: "telefono"
+*    json:
+*      name: "Login"
+*/
 
 module.exports = router;

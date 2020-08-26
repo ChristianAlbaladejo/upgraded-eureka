@@ -12,9 +12,7 @@ const mysqlConnection = require('../mysql-con.js');
 var secret = 'fe1a1915a379f3be5394b64d14794932-1506868106675';
 
 
-
 router.get('/admin/sales/:sord?', md_auth.ensureAuth, (req, res) => {
-    console.log(req.params)
     if (req.params.sord != 'all') {
         mysqlConnection.query('SELECT * FROM salesOrder order by id DESC LIMIT 5', (err, rows, fields) => {
             if (!err) {
