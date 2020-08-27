@@ -1,10 +1,9 @@
 <?php
-
-# code...
+ini_set('display_errors', 1);
 
 //FTP
 // define some variables
-$local_file = 'C:\tmp\export\maestos.xml';
+/* $local_file = 'C:\tmp\export\maestos.xml';
 $server_file = '/export/maestros.xml';
 $dst_dir = 'C:\tmp';
 $src_dir = '\images';
@@ -25,31 +24,31 @@ if (ftp_get($conn_id, $local_file, $server_file, FTP_BINARY)) {
 }
 
 //Sync Images
-/* ftp_putAll($conn_id, $src_dir, $dst_dir);  */
+ ftp_putAll($conn_id, $src_dir, $dst_dir);
 ftp_sync($src_dir);
 
 // close the connection
-ftp_close($conn_id);
+ftp_close($conn_id);*/
 /* rename("C:\images", "C:\\tmp\images"); */
 $servername = 'eu-cdbr-west-03.cleardb.net';
 $username = "b0ab591da45cbb";
 $password = "bdbc7002";
 $dbname = "heroku_2205e3ccffad011";
 
-$path = 'C:\tmp\export\maestros.xml';
+$path = '/home/jnc/maestros.xml';
 
 
 //parse file
-// Read entire file into string 
+// Read entire file into string
 $xmlfile = file_get_contents($path);
 
-// Convert xml string into an object 
+// Convert xml string into an object
 $new = simplexml_load_string($xmlfile);
 
-// Convert into json 
+// Convert into json
 $con = json_encode($new);
 
-// Convert into associative array 
+// Convert into associative array
 $newArr = json_decode($con, true);
 
 $priceList = $newArr["PriceLists"]["PriceList"] ?? '';
@@ -57,7 +56,7 @@ $customer = $newArr['Customers']["Customer"] ?? '';
 $family =  $newArr['Families']['Family'] ?? '';
 $product = $newArr['Products']['Product'] ?? '';
 $stock = $newArr['Stocks']['Stock'] ?? '';
-// print("<pre>" . print_r($priceList, true) . "</pre>"); 
+// print("<pre>" . print_r($priceList, true) . "</pre>");
 
 //INJECTION DATA TO MYSQL
 // Create connection
@@ -143,7 +142,7 @@ for ($i = 0; $i < count($family); ++$i) {
         $row_cnt = $result->num_rows;
         if ($row_cnt == 0) {
             $sql = "INSERT INTO family (id, name, showInPos,buttonText,color)
-    VALUES (" . $family[$i]['@attributes']['Id'] . "," . "'" . $family[$i]['@attributes']['Name'] . "'" . "," . $family[$i]['@attributes']['ShowInPos'] . "," . "'" . $family[$i]['@attributes']['ButtonText'] . "'" . ","  . "'" . $family[$i]['@attributes']['Color'] . "'" . ")";
+    VALUES (" . $family[$i]['@attributes']['Id'] . "," . "'" . $family[$i]['@attributes']['Name'] . "'" . "," . $family[$i]['@attributes']['Order'] . "," . "'" . $family[$i]['@attributes']['ButtonText'] . "'" . ","  . "'" . $family[$i]['@attributes']['Color'] . "'" . ")";
 
             if ($conn->query($sql) === TRUE) {
                 echo "New record created successfully";
@@ -157,7 +156,6 @@ for ($i = 0; $i < count($family); ++$i) {
 for ($i = 0; $i < count($product); ++$i) {
     $select = 'SELECT id FROM product WHERE id = ' . $product[$i]['@attributes']['Id'] . '';
     if ($result = $conn->query($select)) {
-        
         $row_cnt = $result->num_rows;
         if ($row_cnt == 0) {
             $sql = "INSERT INTO product (id,name,baseSaleFormatId,buttonText,color,PLU,familyId,vatId,useAsDirectSale,saleableAsMain,saleableAsAddin,isSoldByWeight,askForPreparationNotes,askForAddins,printWhenPriceIsZero,preparationTypeId,preparationOrderId,costPrice,active)
@@ -173,82 +171,5 @@ for ($i = 0; $i < count($product); ++$i) {
     }
 }
 
-for ($i = 0; $i < count($stock); ++$i) {
-    $select = 'SELECT productId FROM stock WHERE productId = ' . $stock[$i]['@attributes']['ProductId'] . '';
-    if ($result = $conn->query($select)) {
-        $row_cnt = $result->num_rows;
-        if ($row_cnt == 0) {
-            $sql = "INSERT INTO stock (warehouseId	, productId,   quantity)
-    VALUES (" . $stock[$i]['@attributes']['WarehouseId'] . "," . "'" . $stock[$i]['@attributes']['ProductId'] . "'" . ","  . "'" . $stock[$i]['@attributes']['Quantity'] . "'"  . ")";
-
-            if ($conn->query($sql) === TRUE) {
-                echo "New record created successfully, ";
-            } else {
-                echo "Error: " . $sql . "<br>" . $conn->error;
-            }
-        }
-    }
-}
-
-//close connection
 $conn->close();
 
-
-
-
-function ftp_sync($dir)
-{
-    global $conn_id;
-    /* deleteDirectory($dir);  */
-    if ($dir != ".") {
-        if (ftp_chdir($conn_id, $dir) == false) {
-            echo ("Change Dir Failed: $dir<BR>\r\n");
-            return;
-        }
-
-        if (!(is_dir($dir)))
-
-            mkdir($dir);
-        chdir($dir);
-    }
-
-    $contents = ftp_nlist($conn_id, ".");
-    foreach ($contents as $file) {
-
-        if ($file == '.' || $file == '..')
-            continue;
-
-        if (@ftp_chdir($conn_id, $file)) {
-            ftp_chdir($conn_id, "..");
-            ftp_sync($file);
-            echo '<br>the images have been synchronized';
-        } else
-            ftp_get($conn_id, $file, $file, FTP_BINARY);
-    }
-
-    ftp_chdir($conn_id, "..");
-    chdir("..");
-}
-
-function deleteDirectory($dir)
-{
-    if (!file_exists($dir)) {
-        return true;
-    }
-
-    if (!is_dir($dir)) {
-        return unlink($dir);
-    }
-
-    foreach (scandir($dir) as $item) {
-        if ($item == '.' || $item == '..') {
-            continue;
-        }
-
-        if (!deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
-            return false;
-        }
-    }
-
-    return rmdir($dir);
-}

@@ -56,6 +56,8 @@ IF NOT EXISTS`heroku_2205e3ccffad011`.`sistema`
 (50) NULL,
   `obsoleto` TINYINT
 (1) NULL,
+`menssageInError` VARCHAR
+(50) NULL,
   PRIMARY KEY
 (`codigo`))
 ENGINE = InnoDB;
@@ -76,6 +78,18 @@ IF NOT EXISTS`heroku_2205e3ccffad011`.`priceList`
 (45) NULL,
   PRIMARY KEY
 (`id`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table`heroku_2205e3ccffad011`.`priceList`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS`heroku_2205e3ccffad011`.`favorite` ;
+
+CREATE TABLE
+IF NOT EXISTS`heroku_2205e3ccffad011`.`favorite`
+(
+  `productId` INT NOT NULL ,
+  `userId` INT NOT NULL)
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -114,6 +128,10 @@ IF NOT EXISTS`heroku_2205e3ccffad011`.`customer`
   `email` VARCHAR
 (45) NULL,
   `contactPerson` VARCHAR
+(45) NULL,
+`password` VARCHAR
+(45) NULL,
+`role` VARCHAR
 (45) NULL,
   `sendMailing` VARCHAR
 (45) NULL,
@@ -241,6 +259,8 @@ IF NOT EXISTS`heroku_2205e3ccffad011`.`user`
 (45) NULL,
   `telefono` VARCHAR
 (45) NULL,
+`role` VARCHAR
+(45) NULL,
   PRIMARY KEY
 (`id`))
 ENGINE = InnoDB;
@@ -248,7 +268,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table`heroku_2205e3ccffad011`.`user`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS`heroku_2205e3ccffad011`.`order` ;
+DROP TABLE IF EXISTS`heroku_2205e3ccffad011`.`salesorder` ;
 
 CREATE TABLE
 IF NOT EXISTS`heroku_2205e3ccffad011`.`salesorder`
@@ -272,9 +292,16 @@ IF NOT EXISTS`heroku_2205e3ccffad011`.`salesorder`
   `surchargeAmount` VARCHAR
 (45) NULL, 
 `userId` INT NULL,
-  `date` DATE
+`date` VARCHAR
 (45) NULL,
-`sended` VARCHAR(45) NULL,
+`chargesType` VARCHAR
+(45) NULL,
+`deliverydate`VARCHAR
+(45)  NULL,
+`orderNotes` VARCHAR
+(45)  NULL,
+`sended` VARCHAR
+(45) NULL,
 PRIMARY KEY
 (`id`))
 ENGINE = InnoDB;
