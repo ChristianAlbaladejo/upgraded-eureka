@@ -130,7 +130,7 @@ router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
     const  products  = req.body.products;
    let  p = JSON.parse(products)
    for (let i = 0; i < p.length; i++) {
-       mysqlConnection.query("UPDATE product set notes ='" + p[i].notes + "', costPrice = '" + p[i].costPrice +"' WHERE id = '"+p[i].id+"'", function (error, results, fields) {
+       mysqlConnection.query("UPDATE product set description ='" + p[i].description + "', costPrice = '" + p[i].costPrice +"' WHERE id = '"+p[i].id+"'", function (error, results, fields) {
            console.log(error, results, fields);
        })
    }
