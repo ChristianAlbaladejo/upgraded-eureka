@@ -7,6 +7,7 @@ var jwtSimple = require('jwt-simple');
 var md_auth = require('../../middlewares/authenticated');
 var nodemailer = require('nodemailer');
 var moment = require('moment');
+var validator = require('validator');
 
 const mysqlConnection = require('../mysql-con.js');
 var secret = 'fe1a1915a379f3be5394b64d14794932-1506868106675';
@@ -275,31 +276,36 @@ router.post('/login', function (req, response) {
     var password = req.body.password;
   }
   if (email && password) {
-    console.log(email);
-    mysqlConnection.query('SELECT * FROM user WHERE email = ?', [email], function (error, results, fields) {
-      console.log(results);
-      if (results.length != 0 && results[0]['role'] == 'CUSTOMER') {
-        bcrypt.compare(password, results[0]['password'], (err, check) => {
-          if (check) {
-            //generar y devolver token
-            results[0]['password'] = undefined;
-            return response.status(200).send({
-              token: jwt.createToken(results[0]['id']),
-              user: results
-            });
+    if (validator.isEmail(email)) {
+      console.log(email);
+      mysqlConnection.query('SELECT * FROM user WHERE email = ?', [email], function (error, results, fields) {
+        console.log(results);
+        if (results.length != 0 && results[0]['role'] == 'CUSTOMER') {
+          bcrypt.compare(password, results[0]['password'], (err, check) => {
+            if (check) {
+              //generar y devolver token
+              results[0]['password'] = undefined;
+              return response.status(200).send({
+                token: jwt.createToken(results[0]['id']),
+                user: results
+              });
 
-          } else {
-            return response.status(404).send({ message: 'El usuario no se ha podido identificar' });
-          }
-        });
-      } else {
-        return response.status(404).send({ message: 'El usuario no existe' });
-      }
-    });
+            } else {
+              return response.status(404).send({ message: 'El usuario no se ha podido identificar' });
+            }
+          });
+        } else {
+          return response.status(404).send({ message: 'El usuario no existe' });
+        }
+      });
+    } else {
+      return response.status(501).send({ message: 'El email del usuario no es valido' });
+    }
   } else {
     return response.status(404).send({ message: 'El usuario no se ha podido identificar!!' });
   }
 });
+
 
 /**
 * @swagger
@@ -361,7 +367,7 @@ router.post('/register', function (req, res) {
   var params = req.body;
   if (params.name && params.lastname && params.password && params.CIF && params.calle && params.CP && params.telefono && params.poblacion && params.email) {
     // Controlar usuarios duplicados
-    var sql = "SELECT * FROM `customer` WHERE `email`='" + params.email + "'";
+    var sql = "SELECT * FROM `user` WHERE `email`='" + params.email + "'";
     mysqlConnection.query(sql, function (err, results) {
       if (results.length) {
         res.status(200).send({
@@ -369,22 +375,26 @@ router.post('/register', function (req, res) {
         });
       }
       else {
-        bcrypt.hash(params.password, 10, function (err, hash) {
-          params.password = hash;
-          var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`,`role`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "','" + 'CUSTOMER' + "')";
+        if (validator.isEmail(params.email)) {
+          bcrypt.hash(params.password, 10, function (err, hash) {
+            params.password = hash;
+            var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`,`role`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "','" + 'CUSTOMER' + "')";
 
-          mysqlConnection.query(sql, function (err, result) {
-            if (!err) {
-              res.status(200).send({
-                message: 'Registrado'
-              });
-            } else {
-              res.status(500).send({
-                message: err
-              });
-            }
+            mysqlConnection.query(sql, function (err, result) {
+              if (!err) {
+                res.status(200).send({
+                  message: 'Registrado'
+                });
+              } else {
+                res.status(500).send({
+                  message: err
+                });
+              }
+            });
           });
-        });
+        }else{
+          return res.status(500).send({ message: 'El email del usuario no es valido' });
+        }
       }
     });
   } else {
@@ -530,7 +540,7 @@ router.get('/getFavorites/:userId', (req, res) => {
 */
 router.get('/checkFavorite/:productId/:userId', (req, res) => {
   var params = req.params;
-  mysqlConnection.query("SELECT * FROM `favorite` INNER JOIN product ON favorite.productId = product.id WHERE `userId` = " + params.userId + " AND `productId` = "+params.productId+";", (err, rows, fields) => {
+  mysqlConnection.query("SELECT * FROM `favorite` INNER JOIN product ON favorite.productId = product.id WHERE `userId` = " + params.userId + " AND `productId` = " + params.productId + ";", (err, rows, fields) => {
     if (!err) {
       res.json(rows);
     } else {

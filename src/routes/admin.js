@@ -21,15 +21,15 @@ router.get('/admin/sales/:sord?', md_auth.ensureAuth, (req, res) => {
                 console.log(err);
             }
         });
-    }else{
-    mysqlConnection.query('SELECT * FROM salesOrder order by id DESC', (err, rows, fields) => {
-        if (!err) {
-            res.json(rows);
-        } else {
-            console.log(err);
-        }
-    });
-}
+    } else {
+        mysqlConnection.query('SELECT * FROM salesOrder order by id DESC', (err, rows, fields) => {
+            if (!err) {
+                res.json(rows);
+            } else {
+                console.log(err);
+            }
+        });
+    }
 });
 
 router.get('/admin/salesFail', md_auth.ensureAuth, (req, res) => {
@@ -64,13 +64,13 @@ router.get('/admin/getAllOrdersShort', md_auth.ensureAuth, (req, res) => {
 
 router.get('/admin/getchars/:id', md_auth.ensureAuth, (req, res) => {
     const { id } = req.params;
-        mysqlConnection.query("SELECT count(*) from salesorder where month(deliverydate)= ?", [id], function (error, results, fields) {
-            if (!error) {
-                res.json(results);
-            } else {
-                console.log(error);
-            }
-        });
+    mysqlConnection.query("SELECT count(*) from salesorder where month(deliverydate)= ?", [id], function (error, results, fields) {
+        if (!error) {
+            res.json(results);
+        } else {
+            console.log(error);
+        }
+    });
 });
 
 router.get('/admin/totalRevenue', md_auth.ensureAuth, (req, res) => {
@@ -127,21 +127,21 @@ router.put('/admin/updateOrder/:order', md_auth.ensureAuth, (req, res) => {
 });
 
 router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
-    const  products  = req.body.products;
-   let  p = JSON.parse(products)
-   for (let i = 0; i < p.length; i++) {
-       mysqlConnection.query("UPDATE product set description ='" + p[i].description + "', costPrice = '" + p[i].costPrice +"' WHERE id = '"+p[i].id+"'", function (error, results, fields) {
-           console.log(error, results, fields);
-       })
-   }
+    const products = req.body.products;
+    let p = JSON.parse(products)
+    for (let i = 0; i < p.length; i++) {
+        mysqlConnection.query("UPDATE product set description ='" + p[i].description + "', costPrice = '" + p[i].costPrice + "' WHERE id = '" + p[i].id + "'", function (error, results, fields) {
+            console.log(error, results, fields);
+        })
+    }
     res.json(products);
 });
 
 router.get('/admin/getUsers/', md_auth.ensureAuth, (req, res) => {
-        mysqlConnection.query("SELECT * FROM user", function (error, results, fields) {
-            results[0]['password'] = undefined;
-            res.json(results);
-        })
+    mysqlConnection.query("SELECT * FROM user", function (error, results, fields) {
+        results[0]['password'] = undefined;
+        res.json(results);
+    })
 });
 
 router.post('/admin/login', function (req, response) {
@@ -189,16 +189,20 @@ router.post('/admin/register', function (req, res) {
                 });
             }
             else {
-                bcrypt.hash(params.password, 10, function (err, hash) {
-                    params.password = hash;
-                    var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`,`role`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "','" + 'ADMIN' + "')";
+                if (validator.isEmail(params.email)) {
+                    bcrypt.hash(params.password, 10, function (err, hash) {
+                        params.password = hash;
+                        var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`,`role`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "','" + 'ADMIN' + "')";
 
-                    mysqlConnection.query(sql, function (err, result) {
-                        res.status(200).send({
-                            message: 'Registrado'
+                        mysqlConnection.query(sql, function (err, result) {
+                            res.status(200).send({
+                                message: 'Registrado'
+                            });
                         });
                     });
-                });
+                } else {
+                    return res.status(501).send({ message: 'El email del usuario no es valido' });
+                }
             }
         });
     } else {
