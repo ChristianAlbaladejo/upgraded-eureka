@@ -3,13 +3,9 @@ const app = express();
 var bodyParser = require('body-parser');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-const cookieParser = require('cookie-parser');
-const csrf = require('csurf');
 // Settings
 app.set('port', process.env.PORT || 3000);
 
-const csrfProtection = csrf({ cookie: true });
-const parseForm = bodyParser.urlencoded({ extended: false });
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -31,7 +27,6 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Middlewares
-app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -46,10 +41,6 @@ app.use((req, res, next) => {
 // Routes
 app.use(require('./routes/routes'));
 app.use(require('./routes/admin'));
-app.get('/form', csrfProtection, (req, res) => {
-  // pass the csrfToken to the view 
-  res.json( req.csrfToken() );
-});
 
 // Starting the server
 app.listen(app.get('port'), () => {
