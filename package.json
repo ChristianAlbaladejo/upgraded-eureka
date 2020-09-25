@@ -26,7 +26,8 @@
     "stripe": "^8.79.0",
     "swagger-jsdoc": "^4.0.0",
     "swagger-ui-express": "^4.1.4",
-    "validator": "^13.1.1"
+    "validator": "^13.1.1",
+    "pm2":"^4.4.1"
   },
   "devDependencies": {
     "nodemon": "^1.17.5"
