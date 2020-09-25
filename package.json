@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start src/index.js --watch"
+    "start": "pm2-runtime start ecosystem.config.js --env production"
   },
   "keywords": [],
   "author": "",
@@ -27,7 +27,7 @@
     "swagger-jsdoc": "^4.0.0",
     "swagger-ui-express": "^4.1.4",
     "validator": "^13.1.1",
-    "pm2":"^4.4.1"
+    "pm2": "^4.4.1"
   },
   "devDependencies": {
     "nodemon": "^1.17.5"
