@@ -1,1 +1,1 @@
-web: node src/index.js
+web: pm2 start src/index.js --watch
