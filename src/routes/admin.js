@@ -130,7 +130,18 @@ router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
     const products = req.body.products;
     let p = JSON.parse(products)
     for (let i = 0; i < p.length; i++) {
-        mysqlConnection.query("UPDATE product set description ='" + p[i].description + "', costPrice = '" + p[i].costPrice + "' WHERE id = '" + p[i].id + "'", function (error, results, fields) {
+        mysqlConnection.query("UPDATE product set description ='" + p[i].description + "', costPrice = '" + p[i].costPrice + "', image = '" + p[i].image + "' WHERE id = '" + p[i].id + "'", function (error, results, fields) {
+            console.log(error, results, fields);
+        })
+    }
+    res.json(products);
+});
+
+router.post('/admin/newProduct/', md_auth.ensureAuth, (req, res) => {
+    const products = req.body.products;
+    let p = JSON.parse(products)
+    for (let i = 0; i < p.length; i++) {
+        mysqlConnection.query("INSERT INTO product (name, familyId, costPrice, image, quantity, description) values ('" + p[i].name + "'," + p[i].familyId + "," + p[i].costPrice + ", '" + p[i].image + "'," + p[i].quantity + ",'" + p[i].description + "'", function (error, results, fields) {
             console.log(error, results, fields);
         })
     }
@@ -195,13 +206,19 @@ router.post('/admin/register', function (req, res) {
                         var sql = "INSERT INTO `user`(`name`,`lastname`,`password`,`CIF`,`calle`, `CP`, `poblacion`, `email`,`telefono`,`role`) VALUES ('" + params.name + "','" + params.lastname + "','" + params.password + "','" + params.CIF + "','" + params.calle + "','" + params.CP + "','" + params.poblacion + "','" + params.email + "','" + params.telefono + "','" + 'ADMIN' + "')";
 
                         mysqlConnection.query(sql, function (err, result) {
-                            res.status(200).send({
-                                message: 'Registrado'
-                            });
+                            if (!err) {
+                                res.status(200).send({
+                                    message: 'Registrado'
+                                });
+                            } else {
+                                res.status(500).send({
+                                    message: err
+                                });
+                            }
                         });
                     });
                 } else {
-                    return res.status(501).send({ message: 'El email del usuario no es valido' });
+                    return res.status(500).send({ message: 'El email del usuario no es valido' });
                 }
             }
         });
