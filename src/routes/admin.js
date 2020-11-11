@@ -127,21 +127,21 @@ router.put('/admin/updateOrder/:order', md_auth.ensureAuth, (req, res) => {
 });
 
 router.post('/admin/updateFamily/', md_auth.ensureAuth, (req, res) => {
-    const products = req.body.products;
-    let p = JSON.parse(products)
+    const family = req.body.family;
+    let p = JSON.parse(family)
     for (let i = 0; i < p.length; i++) {
-        mysqlConnection.query("UPDATE family set description ='" + p[i].description + "', costPrice = '" + p[i].costPrice + "', image = '" + p[i].image + "', familyId = '" + p[i].familyId + "' WHERE id = '" + p[i].id + "'", function (error, results, fields) {
+        mysqlConnection.query("UPDATE family set image ='" + p[i].image + "', name = '" + p[i].name +  "' WHERE id = '" + p[i].id + "'", function (error, results, fields) {
             console.log(error, results, fields);
         })
     }
-    res.json(products);
+    res.json(family);
 });
 
 router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
-    const family = req.body.family;
-    let f = JSON.parse(family)
-    for (let i = 0; i < f.length; i++) {
-        mysqlConnection.query("UPDATE product set image ='" + f[i].image + "', name = '" + p[i].name + "'", function (error, results, fields) {
+    const products = req.body.products;
+    let p = JSON.parse(products)
+    for (let i = 0; i < p.length; i++) {
+        mysqlConnection.query("UPDATE product set image ='" + p[i].image + "', costPrice = '" + p[i].costPrice + "', image = '" + p[i].image + "', familyId = '" + p[i].familyId + "' WHERE id = '" + p[i].id + "'", function (error, results, fields) {
             console.log(error, results, fields);
         })
     }
