@@ -140,11 +140,13 @@ router.post('/admin/updateFamily/', md_auth.ensureAuth, (req, res) => {
 router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
     const products = req.body.products;
     let p = JSON.parse(products)
+    let query;
     for (let i = 0; i < p.length; i++) {
-        mysqlConnection.query("UPDATE product set image ='" + p[i].image + "', costPrice = '" + p[i].costPrice + "', image = '" + p[i].image + "', familyId = '" + p[i].familyId + "', name = '" + p[i].name + "' WHERE id = '" + p[i].id + "'", function (error, results, fields) {
-            console.log(error, results, fields);
-        })
+        query += "set image = '" + p[i].image + "', costPrice = '" + p[i].costPrice + "', image = '" + p[i].image + "', familyId = '" + p[i].familyId + "', name = '" + p[i].name + "'"
     }
+    mysqlConnection.query("UPDATE product " + query, function (error, results, fields) {
+        console.log(error, results, fields);
+    })
     res.json(products);
 });
 
