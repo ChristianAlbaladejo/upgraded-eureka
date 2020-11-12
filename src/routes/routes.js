@@ -8,6 +8,7 @@ var md_auth = require('../../middlewares/authenticated');
 var nodemailer = require('nodemailer');
 var moment = require('moment');
 var validator = require('validator');
+const stripe = require('stripe')('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');
 
 const mysqlConnection = require('../mysql-con.js');
 var secret = 'fe1a1915a379f3be5394b64d14794932-1506868106675';
@@ -820,6 +821,27 @@ router.post('/resetpassword', function (req, res) {
     });
   });
   res.send('Your password has been successfully changed.');
+});
+
+router.post('/create-session', async (req, res) => {
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+          },
+          unit_amount: 2000,
+        },
+        quantity: 1,
+      },
+    ],
+    mode: 'payment',
+    success_url: `${YOUR_DOMAIN}/success.html`,
+    cancel_url: `${YOUR_DOMAIN}/cancel.html`,
+  });
+  res.json({ id: session.id });
 });
 
 /**
