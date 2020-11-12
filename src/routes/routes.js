@@ -8,7 +8,7 @@ var md_auth = require('../../middlewares/authenticated');
 var nodemailer = require('nodemailer');
 var moment = require('moment');
 var validator = require('validator');
-const stripe = require('stripe')('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');
+const stripe = require('stripe')('sk_test_51HEUwyHEn9GtZEa1WL64IUJ3msYdvxZeei18cQzpjWV0vLk3lV5p8F77nZswIUis5FhUvAPUc3c8xyVTQe47RbHh00RRxKhFzt');
 
 const mysqlConnection = require('../mysql-con.js');
 var secret = 'fe1a1915a379f3be5394b64d14794932-1506868106675';
