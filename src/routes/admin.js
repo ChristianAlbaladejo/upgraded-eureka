@@ -152,7 +152,7 @@ router.post('/admin/newFamily/', md_auth.ensureAuth, (req, res) => {
     const family = req.body.family;
     let f = JSON.parse(family)
     console.log(f)
-        mysqlConnection.query("INSERT INTO family (name, image) values ('" + f[i].name + "','" + f[i].image + "'", function (error, results, fields) {
+        mysqlConnection.query("INSERT INTO family (name, image) values ('" + f.name + "','" + f.image + "'", function (error, results, fields) {
             console.log(error, results, fields);
         })
     
