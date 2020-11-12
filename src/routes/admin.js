@@ -151,11 +151,11 @@ router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
 router.post('/admin/newFamily/', md_auth.ensureAuth, (req, res) => {
     const family = req.body.family;
     let f = JSON.parse(family)
-    for (let i = 0; i < f.length; i++) {
+    console.log(f)
         mysqlConnection.query("INSERT INTO family (name, image) values ('" + f[i].name + "','" + f[i].image + "'", function (error, results, fields) {
             console.log(error, results, fields);
         })
-    }
+    
     res.json(family);
 });
 
