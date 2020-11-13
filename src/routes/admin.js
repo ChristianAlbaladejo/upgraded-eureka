@@ -5,6 +5,7 @@ var bcrypt = require('bcrypt');
 var jwt = require('../../services/jwt');
 var jwtSimple = require('jwt-simple');
 var md_auth = require('../../middlewares/authenticated');
+var validator = require('validator');
 var nodemailer = require('nodemailer');
 var moment = require('moment');
 
@@ -14,7 +15,7 @@ var secret = 'fe1a1915a379f3be5394b64d14794932-1506868106675';
 
 router.get('/admin/sales/:sord?', md_auth.ensureAuth, (req, res) => {
     if (req.params.sord != 'all') {
-        mysqlConnection.query('SELECT * FROM salesOrder order by id DESC LIMIT 5', (err, rows, fields) => {
+        mysqlConnection.query('SELECT * FROM salesorder order by id DESC LIMIT 5', (err, rows, fields) => {
             if (!err) {
                 res.json(rows);
             } else {
@@ -22,7 +23,7 @@ router.get('/admin/sales/:sord?', md_auth.ensureAuth, (req, res) => {
             }
         });
     } else {
-        mysqlConnection.query('SELECT * FROM salesOrder order by id DESC', (err, rows, fields) => {
+        mysqlConnection.query('SELECT * FROM salesorder order by id DESC', (err, rows, fields) => {
             if (!err) {
                 res.json(rows);
             } else {
@@ -33,7 +34,7 @@ router.get('/admin/sales/:sord?', md_auth.ensureAuth, (req, res) => {
 });
 
 router.get('/admin/salesFail', md_auth.ensureAuth, (req, res) => {
-    mysqlConnection.query("SELECT * FROM salesOrder where sended = 'false' order by id DESC", (err, rows, fields) => {
+    mysqlConnection.query("SELECT * FROM salesorder where sended = 'false' order by id DESC", (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
@@ -74,7 +75,7 @@ router.get('/admin/getchars/:id', md_auth.ensureAuth, (req, res) => {
 });
 
 router.get('/admin/totalRevenue', md_auth.ensureAuth, (req, res) => {
-    mysqlConnection.query('SELECT SUM(grossAmount) FROM salesOrder', (err, rows, fields) => {
+    mysqlConnection.query('SELECT SUM(grossAmount) FROM salesorder', (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
@@ -94,7 +95,7 @@ router.get('/admin/totalUser', md_auth.ensureAuth, (req, res) => {
 });
 
 router.get('/admin/totalSales', md_auth.ensureAuth, (req, res) => {
-    mysqlConnection.query('SELECT COUNT(*) FROM salesOrder', (err, rows, fields) => {
+    mysqlConnection.query('SELECT COUNT(*) FROM salesorder', (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
