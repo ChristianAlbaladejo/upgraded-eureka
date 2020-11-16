@@ -138,6 +138,28 @@ router.post('/admin/updateFamily/', md_auth.ensureAuth, (req, res) => {
     res.json(family);
 });
 
+router.post('/admin/deleteFamily/', md_auth.ensureAuth, (req, res) => {
+    const family = req.body.family;
+    let p = JSON.parse(family)
+    for (let i = 0; i < p.length; i++) {
+        mysqlConnection.query("DELETE FROM family  WHERE id = '" + p[i].id + "'", function (error, results, fields) {
+            console.log(error, results, fields);
+        })
+    }
+    res.json(family);
+});
+
+router.post('/admin/deleteProduct/', md_auth.ensureAuth, (req, res) => {
+    const family = req.body.family;
+    let p = JSON.parse(family)
+    for (let i = 0; i < p.length; i++) {
+        mysqlConnection.query("DELETE FROM product WHERE id = '" + p[i].id + "'", function (error, results, fields) {
+            console.log(error, results, fields);
+        })
+    }
+    res.json(family);
+});
+
 router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
     const products = req.body.products;
     let p = JSON.parse(products)
