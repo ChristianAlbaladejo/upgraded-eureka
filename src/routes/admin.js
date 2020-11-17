@@ -5,6 +5,7 @@ var bcrypt = require('bcrypt');
 var jwt = require('../../services/jwt');
 var jwtSimple = require('jwt-simple');
 var md_auth = require('../../middlewares/authenticated');
+var validator = require('validator');
 var nodemailer = require('nodemailer');
 var moment = require('moment');
 var validator = require('validator');
@@ -112,7 +113,7 @@ router.get('/admin/totalUser', md_auth.ensureAuth, (req, res) => {
 });
 
 router.get('/admin/totalSales', md_auth.ensureAuth, (req, res) => {
-    mysqlConnection.query('SELECT COUNT(*) FROM salesOrder', (err, rows, fields) => {
+    mysqlConnection.query('SELECT COUNT(*) FROM salesorder', (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
@@ -152,6 +153,24 @@ router.post('/admin/updateFamily/', md_auth.ensureAuth, (req, res) => {
             console.log(error, results, fields);
         })
     }
+    res.json(family);
+});
+
+router.post('/admin/deleteFamily/', md_auth.ensureAuth, (req, res) => {
+    const family = req.body.family;
+    let p = JSON.parse(family)
+        mysqlConnection.query("DELETE FROM family  WHERE id = '" + p[i].id + "'", function (error, results, fields) {
+            console.log(error, results, fields);
+        })
+    res.json(family);
+});
+
+router.post('/admin/deleteProduct/', md_auth.ensureAuth, (req, res) => {
+    const family = req.body.family;
+    let p = JSON.parse(family)
+        mysqlConnection.query("DELETE FROM product WHERE id = '" + p.id + "'", function (error, results, fields) {
+            console.log(error, results, fields);
+        })
     res.json(family);
 });
 
