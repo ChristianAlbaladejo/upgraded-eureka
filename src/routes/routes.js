@@ -639,7 +639,7 @@ router.get('/filterByName/:filter?/:family?', (req, res) => {
 *      name: "stripe"
 */
 router.post('/charge', function (req, res) {
-  const stripe = require("stripe")("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");
+  const stripe = require("stripe")("sk_test_51HEUwyHEn9GtZEa1WL64IUJ3msYdvxZeei18cQzpjWV0vLk3lV5p8F77nZswIUis5FhUvAPUc3c8xyVTQe47RbHh00RRxKhFzt");
   const stripToken = req.body.stripeToken;
   const amount = req.body.amount
   stripe.charges.create(

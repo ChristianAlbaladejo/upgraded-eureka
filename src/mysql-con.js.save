@@ -62,7 +62,8 @@ var mysql = require('mysql');
 var db_config = {
   host: 'localhost',
   user: 'root',
-  password: 'user',
+  password: 'user
+',
   database: 'delivery',
   port: 3306,
   connectionLimit: 50,

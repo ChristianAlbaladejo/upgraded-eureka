@@ -7,14 +7,14 @@ var jwtSimple = require('jwt-simple');
 var md_auth = require('../../middlewares/authenticated');
 var nodemailer = require('nodemailer');
 var moment = require('moment');
-
+var validator = require('validator');
 const mysqlConnection = require('../mysql-con.js');
 var secret = 'fe1a1915a379f3be5394b64d14794932-1506868106675';
 
 
 router.get('/admin/sales/:sord?', md_auth.ensureAuth, (req, res) => {
     if (req.params.sord != 'all') {
-        mysqlConnection.query('SELECT * FROM salesOrder order by id DESC LIMIT 5', (err, rows, fields) => {
+        mysqlConnection.query('SELECT * FROM salesorder order by id DESC LIMIT 5', (err, rows, fields) => {
             if (!err) {
                 res.json(rows);
             } else {
@@ -22,7 +22,7 @@ router.get('/admin/sales/:sord?', md_auth.ensureAuth, (req, res) => {
             }
         });
     } else {
-        mysqlConnection.query('SELECT * FROM salesOrder order by id DESC', (err, rows, fields) => {
+        mysqlConnection.query('SELECT * FROM salesorder order by id DESC', (err, rows, fields) => {
             if (!err) {
                 res.json(rows);
             } else {
@@ -32,8 +32,26 @@ router.get('/admin/sales/:sord?', md_auth.ensureAuth, (req, res) => {
     }
 });
 
+router.post('/admin/deleteFamily/', md_auth.ensureAuth, (req, res) => {
+    const family = req.body.family;
+    let p = JSON.parse(family)
+        mysqlConnection.query("DELETE FROM family  WHERE id = '" + p.id + "'", function (error, results, fields) {
+            console.log(error, results, fields);
+        })
+    res.json(family);
+});
+
+router.post('/admin/deleteProduct/', md_auth.ensureAuth, (req, res) => {
+    const product = req.body.product;
+    let p = JSON.parse(product)
+        mysqlConnection.query("DELETE FROM product WHERE id = '" + p.id + "'", function (error, results, fields) {
+            console.log(error, results, fields);
+        })
+    res.json(product);
+});
+
 router.get('/admin/salesFail', md_auth.ensureAuth, (req, res) => {
-    mysqlConnection.query("SELECT * FROM salesOrder where sended = 'false' order by id DESC", (err, rows, fields) => {
+    mysqlConnection.query("SELECT * FROM salesorder where sended = 'false' order by id DESC", (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
@@ -74,7 +92,7 @@ router.get('/admin/getchars/:id', md_auth.ensureAuth, (req, res) => {
 });
 
 router.get('/admin/totalRevenue', md_auth.ensureAuth, (req, res) => {
-    mysqlConnection.query('SELECT SUM(grossAmount) FROM salesOrder', (err, rows, fields) => {
+    mysqlConnection.query('SELECT SUM(grossAmount) FROM salesorder', (err, rows, fields) => {
         if (!err) {
             res.json(rows);
         } else {
@@ -141,7 +159,7 @@ router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
     const products = req.body.products;
     let p = JSON.parse(products)
     for (let i = 0; i < p.length; i++) {
-        mysqlConnection.query("UPDATE product set image ='" + p[i].image + "', costPrice = '" + p[i].costPrice + "', image = '" + p[i].image + "', familyId = '" + p[i].familyId + "', name = '" + p[i].name + "' WHERE id = '" + p[i].id + "'", function (error, results, fields) {
+        mysqlConnection.query("UPDATE product set image ='" + p[i].image + "', description = '"+ p[i].description + "', costPrice = '" + p[i].costPrice + "', image = '" + p[i].image + "', familyId = '" + p[i].familyId + "', name = '" + p[i].name + "' WHERE id = '" + p[i].id + "'", function (error, results, fields) {
             console.log(error, results, fields);
         })
     }
@@ -149,24 +167,24 @@ router.post('/admin/updateProducts/', md_auth.ensureAuth, (req, res) => {
 });
 
 router.post('/admin/newFamily/', md_auth.ensureAuth, (req, res) => {
+    console.log('a', req.body.family);
     const family = req.body.family;
     let f = JSON.parse(family)
     console.log(f)
         mysqlConnection.query("INSERT INTO family (name, image) values ('" + f.name + "','" + f.image + "')", function (error, results, fields) {
             console.log(error, results, fields);
         })
-    
     res.json(family);
 });
 
 router.post('/admin/newProduct/', md_auth.ensureAuth, (req, res) => {
     const products = req.body.products;
     let p = JSON.parse(products)
-    for (let i = 0; i < p.length; i++) {
-        mysqlConnection.query("INSERT INTO product (name, familyId, costPrice, image, quantity, description) values ('" + p[i].name + "'," + p[i].familyId + "," + p[i].costPrice + ", '" + p[i].image + "'," + p[i].quantity + ",'" + p[i].description + "'", function (error, results, fields) {
-            console.log(error, results, fields);
-        })
-    }
+    let sql = "INSERT INTO product (name, familyId, costPrice, image, quantity, description) values ('" + p.name + "','" + p.family + "'," + p.price + ", '" + p.image + "', 1 ,'" + p.description + "');"
+    console.log(sql);
+    mysqlConnection.query(sql, function (error, results, fields) {
+        console.log(error, results, fields);
+    })
     res.json(products);
 });
 
